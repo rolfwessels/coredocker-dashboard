@@ -1,21 +1,28 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import MyCard from './components/mycard';
 import './App.css';
+import { 
+  LoginPage,
+  HomePage,
+  Error404
+} from "./pages/";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+import "tabler-react/dist/Tabler.css";
+
+type Props = {||};
+
+function App(props: Props): React.Node {
+  return (
+    <Router basename={process.env.PUBLIC_URL}>
+      <Switch>
+        <Route exact path="/" component={HomePage} />
+        <Route exact path="/login" component={LoginPage} />
+        <Route component={Error404} />
+      </Switch>
+    </Router>
+  );
 }
 
 export default App;
