@@ -16,7 +16,7 @@ type Props = {||};
 
 class App extends React.Component<Props> {
 
-  requireAuth(nextState, replace, next) {
+  requireAuth(nextState: any, replace : any, next: any) {
     const authenticated = false;
     console.log('authenticated',authenticated);
     if (!authenticated) {
