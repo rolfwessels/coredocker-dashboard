@@ -26,7 +26,7 @@ type navItem = {|
 |};
 
 const navBarItems: Array<navItem> = [
-  { value: "Dashboard", to: "/", icon: "home", LinkComponent: withRouter(NavLink) },
+  { value: "Dashboard", to: "/", icon: "home" },//, LinkComponent: withRouter(NavLink) < this is something to dow the selected page but not working
   {
     value: "Details",
     icon: "box",
@@ -34,11 +34,11 @@ const navBarItems: Array<navItem> = [
       {
         value: "Project",
         to: "/projects",
-        LinkComponent: withRouter(NavLink),
+        // LinkComponent: withRouter(NavLink),
       },
     ],
   },
-  
+
 ];
 
 
@@ -85,7 +85,7 @@ class SiteWrapper extends React.Component<Props, void> {
         footerProps={{
           links: [
             <a href="/">dashboard</a>,
-            
+
           ],
           note: "",
           copyright: (

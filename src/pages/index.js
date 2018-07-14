@@ -1,9 +1,11 @@
-import LoginPage from "./LoginPage.react";
-import Error404 from "./Error404.react";
-import HomePage from "./HomePage.react";
+import LoginPage from "./security/LoginPage";
+import DashboardPage from "./dashboard/DashboardPage";
+import ProjectsPage from "./projects/ProjectsPage";
+import Error404 from "./error/Error404";
 
 export {
+  DashboardPage,
   LoginPage,
-  HomePage,
+  ProjectsPage,
   Error404,
 };

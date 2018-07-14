@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import MyCard from './components/mycard';
+// @flow strict
+
+import React from 'react';
 import './App.css';
-import { 
+import {
   LoginPage,
-  HomePage,
+  DashboardPage,
+  ProjectsPage,
   Error404
 } from "./pages/";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -13,16 +14,33 @@ import "tabler-react/dist/Tabler.css";
 
 type Props = {||};
 
-function App(props: Props): React.Node {
-  return (
-    <Router basename={process.env.PUBLIC_URL}>
-      <Switch>
-        <Route exact path="/" component={HomePage} />
-        <Route exact path="/login" component={LoginPage} />
-        <Route component={Error404} />
-      </Switch>
-    </Router>
-  );
+class App extends React.Component<Props> {
+
+  requireAuth(nextState, replace, next) {
+    const authenticated = false;
+    console.log('authenticated',authenticated);
+    if (!authenticated) {
+      replace({
+        pathname: "/login",
+        state: {nextPathname: nextState.location.pathname}
+      });
+    }
+    next();
+  }
+
+  render() {
+    return (
+      <Router basename={process.env.PUBLIC_URL}>
+        <Switch>
+
+          <Route exact path="/login" component={LoginPage} />
+          <Route exact path="/" component={DashboardPage} onEnter={this.requireAuth} />
+          <Route exact path="/projects" component={ProjectsPage} onEnter={this.requireAuth} />
+          <Route component={Error404} />
+        </Switch>
+      </Router>
+    );
+  }
 }
 
 export default App;

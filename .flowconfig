@@ -1,0 +1,15 @@
+[ignore]
+.*/node_modules/findup/.*
+.*/node_modules/eslint-plugin-jsx-a11y/.*
+[include]
+./src/
+
+[libs]
+./flow-typed
+./dist/index.js.flow
+[lints]
+
+[options]
+module.name_mapper='.*\(.css\)' -> 'empty/object'
+
+[strict]
