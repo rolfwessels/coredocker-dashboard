@@ -1,7 +1,7 @@
-// @flow
+// @flow strict
 
 import * as React from "react";
-import { NavLink, withRouter } from "react-router-dom";
+// import { NavLink, withRouter } from "react-router-dom";
 
 import { Site, Nav, Grid, List, Button } from "tabler-react";
 

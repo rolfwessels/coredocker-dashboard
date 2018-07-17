@@ -8,24 +8,18 @@ import {
   ProjectsPage,
   Error404
 } from "./pages/";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import AuthService from "./core/AuthService"
 import "tabler-react/dist/Tabler.css";
 
 type Props = {||};
 
 class App extends React.Component<Props> {
+  _authService : AuthService  = new AuthService()
 
-  requireAuth(nextState: any, replace : any, next: any) {
-    const authenticated = false;
-    console.log('authenticated',authenticated);
-    if (!authenticated) {
-      replace({
-        pathname: "/login",
-        state: {nextPathname: nextState.location.pathname}
-      });
-    }
-    next();
+  isLoggedIn()
+  {
+    return this._authService.isLoggedIn();
   }
 
   render() {
@@ -34,8 +28,8 @@ class App extends React.Component<Props> {
         <Switch>
 
           <Route exact path="/login" component={LoginPage} />
-          <Route exact path="/" component={DashboardPage} onEnter={this.requireAuth} />
-          <Route exact path="/projects" component={ProjectsPage} onEnter={this.requireAuth} />
+          <Route exact path="/"  render={() => ( this.isLoggedIn() ? (<DashboardPage />):(<Redirect to="/login"/>) )} />
+          <Route exact path="/projects"  render={() => ( this.isLoggedIn() ? (<ProjectsPage />):(<Redirect to="/login"/>) )}/>
           <Route component={Error404} />
         </Switch>
       </Router>

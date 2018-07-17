@@ -7,5 +7,4 @@ cache:
 script:
   - yarn
   - yarn flow
-  # - yarn test
   - yarn run build
