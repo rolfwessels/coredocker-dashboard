@@ -8,8 +8,8 @@
     "oidc-client": "^1.5.2",
     "react": "^16.4.1",
     "react-c3js": "^0.1.20",
+    "react-device-storage": "^1.0.0",
     "react-dom": "^16.4.1",
-    "react-easy-state": "^5.1.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
     "tabler-react": "^1.15.0"

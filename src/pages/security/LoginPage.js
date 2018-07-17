@@ -5,6 +5,7 @@ import * as React from "react";
 import { Formik } from "formik";
 import AuthService from "../../core/AuthService";
 import { LoginPage as TablerLoginPage } from "tabler-react";
+import QueryString from "query-string";
 
 type Props = {||};
 
@@ -34,8 +35,12 @@ class LoginPage extends React.Component<Props> {
         setErrors({password: "Could not valid user. Please try again later." });
 
     })
+  }
 
-
+  componentDidMount() {
+    var isLogoutRequested = QueryString.parse(this.props.location.search).logout || false;
+    if (isLogoutRequested)
+      this.authService.logout()
   }
 
   render() {
@@ -82,4 +87,6 @@ class LoginPage extends React.Component<Props> {
 }
 
 export default LoginPage;
+
+
 

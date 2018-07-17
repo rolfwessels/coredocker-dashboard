@@ -3,6 +3,9 @@
 import AppSettings from './AppSettings';
 import Oidc from 'oidc-client';
 import ApiService from './ApiService';
+import DeviceStorage from 'react-device-storage';
+
+
 
 export default class AuthService {
   url: string = "";
@@ -13,6 +16,16 @@ export default class AuthService {
     this.url = new AppSettings().ApiEndPoint();
     this.urlToken = new AppSettings().ApiEndPoint()+"/connect/token";
     this.apiService = new ApiService();
+
+    this.storage = new DeviceStorage({
+      cookieFallback: true,
+      cookie: {
+        secure: true
+      }
+    }).localStorage();
+
+    this.token = this.storage.read('authServiceToken') || {};
+
     this.config = {
       authority: this.urlToken,
       client_id: "coredocker.api",
@@ -24,9 +37,11 @@ export default class AuthService {
     };
     this.mgr = new Oidc.UserManager(this.config);
   }
+
   isLoggedIn() {
-    console.log("token",this.token);
-    return this.token.access_token;
+    const expDate = new Date(this.token.expires)
+    let loggedIn = this.token.access_token?expDate > new Date() : false
+    return loggedIn;
   }
 
   serialize( obj ) {
@@ -52,10 +67,23 @@ export default class AuthService {
         body: this.serialize(data),
     }))
     .then(token=>{
-      this.token = token;
+
+      this.token.access_token = token.access_token;
+      this.token.expires = new Date(new Date().getTime() + (token.expires_in * 1000));
+      this.storage.save('authServiceToken', this.token);
       this.isLoggedIn();
+
     })
   }
+
+  logout() {
+    console.log("logging out");
+    this.token.access_token = null;
+    this.token.expires = new Date();
+    this.storage.save('authServiceToken', this.token);
+  }
+
+
 }
 
 

@@ -1656,7 +1656,7 @@ cookie-signature@1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/cookie-signature/-/cookie-signature-1.0.6.tgz#e303a882b342cc3ee8ca513a79999734dab3ae2c"
 
-cookie@0.3.1:
+cookie@0.3.1, cookie@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.3.1.tgz#e7e0a1f9ef43b4c8ba925c5c5a96e806d16873bb"
 
@@ -5641,6 +5641,12 @@ react-dev-utils@^5.0.1:
     sockjs-client "1.1.4"
     strip-ansi "3.0.1"
     text-table "0.2.0"
+
+react-device-storage@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-device-storage/-/react-device-storage-1.0.0.tgz#d8385698b3e060e2b420321d416ed2a238204974"
+  dependencies:
+    cookie "^0.3.1"
 
 react-dom@^16.4.1:
   version "16.4.1"

@@ -53,11 +53,12 @@ const accountDropdownProps = {
     // { icon: "send", value: "Message" },
     // { isDivider: true },
     // { icon: "help-circle", value: "Need help?" },
-    { icon: "log-out", value: "Sign out" , to: "/login" },
+    { icon: "log-out", value: "Sign out" , to: "/login?logout=true" },
   ],
 };
 
 class SiteWrapper extends React.Component<Props, void> {
+
   render(): React.Node {
     return (
       <Site.Wrapper
