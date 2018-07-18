@@ -15,14 +15,12 @@ class LoginPage extends React.Component<Props> {
   constructor() {
     super();
     this.authService = new AuthService();
-    console.log('authService',this.authService);
   }
 
   onLogin(values,{ setSubmitting, setErrors /* setValues and other goodies */ }  )
   {
 
     setSubmitting(true);
-    console.log('authService',this.authService);
     this.authService.login(values.email,values.password).then((t) =>{
       setSubmitting(false);
       this.props.history.push('/');

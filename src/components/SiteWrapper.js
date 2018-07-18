@@ -4,6 +4,9 @@ import * as React from "react";
 // import { NavLink, withRouter } from "react-router-dom";
 
 import { Site, Nav, Grid, List, Button } from "tabler-react";
+import AuthService from "../core/AuthService";
+
+const md5 = require('md5');
 
 type Props = {|
   +children: React.Node,
@@ -42,7 +45,7 @@ const navBarItems: Array<navItem> = [
 ];
 
 
-const accountDropdownProps = {
+let accountDropdownProps = {
   avatarURL: "https://en.gravatar.com/userimage/37190760/17210d6aefc2c2865103c87afd046242.jpeg",
   name: "Jane Pearson",
   description: "Administrator",
@@ -58,8 +61,21 @@ const accountDropdownProps = {
 };
 
 class SiteWrapper extends React.Component<Props, void> {
+  componentDidMount() {
+
+
+  }
 
   render(): React.Node {
+    let authService = new AuthService()
+    let token =  authService.currentToken();
+    console.log('token',token);
+    accountDropdownProps.name = token.name;
+    accountDropdownProps.description = token.roles.join(',');
+    let avatarId = md5(token.email.toLowerCase());
+  console.log(avatarId);
+    accountDropdownProps.avatarURL = `https://en.gravatar.com/avatar/${avatarId}.jpeg?d=retro`;
+
     return (
       <Site.Wrapper
         headerProps={{
