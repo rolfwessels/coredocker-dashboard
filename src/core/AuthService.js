@@ -32,6 +32,15 @@ const storage = new DeviceStorage({
   }
 }).localStorage();
 
+const GET_USER_ME =gql`
+{
+  users {
+    me {
+      name,email,roles,id
+    }
+  }
+}`;
+
 
 
 export default class AuthService {
@@ -96,16 +105,7 @@ export default class AuthService {
         token.access_token = tokenResponse.access_token;
         token.expires = new Date(new Date().getTime() + (tokenResponse.expires_in * 1000));
         this.storeToken(token);
-        return this.apiService.query({
-          query: gql`
-        {
-          users {
-            me {
-              name,email,roles,id
-            }
-          }
-        }`
-        }).then(result => {
+        return this.apiService.query(GET_USER_ME).then(result => {
           const me = result.data.users.me;
           token.name = me.name;
           token.email = me.email;

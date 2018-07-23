@@ -44,9 +44,21 @@ const authLink = setContext((_, { headers }) => {
   }
 });
 
+const defaultOptions = {
+  watchQuery: {
+    fetchPolicy: 'network-only',
+    errorPolicy: 'ignore',
+  },
+  query: {
+    fetchPolicy: 'network-only',
+    errorPolicy: 'all',
+  },
+}
+
 const graphql: ApolloClient = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  defaultOptions: defaultOptions,
 });
 
 class ApiService {
@@ -58,13 +70,17 @@ class ApiService {
   }
 
   query(query) {
-    console.log('query',query);
-    return this.graphql.query(query)
+    return this.graphql.query({
+      query : query
+    })
   }
 
-  mutate(query) {
-    console.log('mutate',query);
-    return this.graphql.mutate(query)
+  mutate(mutation,variables) {
+
+    return this.graphql.mutate({
+      mutation : mutation,
+      variables: variables
+    })
   }
 
 

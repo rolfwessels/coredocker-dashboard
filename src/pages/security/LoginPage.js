@@ -24,7 +24,7 @@ class LoginPage extends React.Component<Props> {
     this.authService.login(values.email,values.password).then((t) =>{
       console.log('login done');
       setSubmitting(false);
-      this.props.history.push('/');
+      document.location = "/";
     },(e)=>{
       console.error("error logging  in",e);
       setSubmitting(false);
