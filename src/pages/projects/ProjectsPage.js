@@ -24,14 +24,6 @@ const GET_PROJECTS = gql`
   }
 `;
 
-const INSERT_PROJECT = gql`mutation {
-  projects {
-    insert(project : {name : "casd"}) {
-      id
-    }
-  }
-}`;
-
 const DELETE_PROJECT = gql`mutation projectsDelete($projectId: String!) {
   projects {
     delete(id: $projectId)
@@ -40,11 +32,14 @@ const DELETE_PROJECT = gql`mutation projectsDelete($projectId: String!) {
 
 class ProjectsPage extends React.Component<Props> {
   apiService: ApiService
+
+
   constructor() {
     super();
     this.apiService = new ApiService();
     this.state = {
-      projects: []
+      projects: [],
+      isLoading: true
     };
   }
 
@@ -54,11 +49,14 @@ class ProjectsPage extends React.Component<Props> {
 
   refreshData() {
     this.apiService.query(GET_PROJECTS)
-      .then(response => this.setState({ projects: response.data.projects.all }));
+      .then(response => this.setState({
+        projects: response.data.projects.all,
+        isLoading: false
+      }));
   }
 
   update(project) {
-    document.location = `projects/${project.id}`;
+    document.location = `/project/${project.id}`;
   }
 
   remove(project, callback) {
@@ -71,6 +69,7 @@ class ProjectsPage extends React.Component<Props> {
     return (
       <SiteWrapper>
         <Page.Content title="Projects">
+
           <ProjectsList data={projects} update={(m, c) => this.update(m, c)} remove={(m, c) => this.remove(m, c)} />
         </Page.Content>
       </SiteWrapper>

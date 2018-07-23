@@ -69,9 +69,10 @@ class ApiService {
     this.graphql = graphql;
   }
 
-  query(query) {
+  query(query,variables) {
     return this.graphql.query({
-      query : query
+      query : query,
+      variables: variables
     })
   }
 

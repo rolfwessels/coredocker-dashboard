@@ -6,11 +6,13 @@ import {
   LoginPage,
   DashboardPage,
   ProjectsPage,
-  Error404
+  ProjectUpdatePage,
+  Error404,
 } from "./pages/";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import AuthService from "./core/AuthService"
 import "tabler-react/dist/Tabler.css";
+
 
 type Props = {||};
 
@@ -27,9 +29,10 @@ class App extends React.Component<Props> {
       <Router basename={process.env.PUBLIC_URL}>
         <Switch>
 
+          <Route exact path="/"  render={(routeProps) => ( this.isLoggedIn() ? (<DashboardPage   {...routeProps} />):(<Redirect to="/login"/>) )} />
+          <Route path="/projects/"  render={(routeProps) => ( this.isLoggedIn() ? (<ProjectsPage  {...routeProps}/>):(<Redirect to="/login"/>) )}/>
+          <Route path="/project/:id"  render={(routeProps) => ( this.isLoggedIn() ? (<ProjectUpdatePage  {...routeProps}/>):(<Redirect to="/login"/>) )}/>
           <Route exact path="/login" component={LoginPage} />
-          <Route exact path="/"  render={() => ( this.isLoggedIn() ? (<DashboardPage />):(<Redirect to="/login"/>) )} />
-          <Route exact path="/projects"  render={() => ( this.isLoggedIn() ? (<ProjectsPage />):(<Redirect to="/login"/>) )}/>
           <Route component={Error404} />
         </Switch>
       </Router>
