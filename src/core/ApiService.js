@@ -58,8 +58,15 @@ class ApiService {
   }
 
   query(query) {
+    console.log('query',query);
     return this.graphql.query(query)
   }
+
+  mutate(query) {
+    console.log('mutate',query);
+    return this.graphql.mutate(query)
+  }
+
 
 }
 

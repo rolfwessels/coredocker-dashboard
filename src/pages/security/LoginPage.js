@@ -22,9 +22,11 @@ class LoginPage extends React.Component<Props> {
 
     setSubmitting(true);
     this.authService.login(values.email,values.password).then((t) =>{
+      console.log('login done');
       setSubmitting(false);
       this.props.history.push('/');
     },(e)=>{
+      console.error("error logging  in",e);
       setSubmitting(false);
       if (e.message=== "invalid_grant") {
         setErrors({password: "Invalid username or password." });

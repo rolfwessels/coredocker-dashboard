@@ -1,7 +1,6 @@
 // @flow strict
 
 import * as React from "react";
-// import { NavLink, withRouter } from "react-router-dom";
 
 import { Site, Nav, Grid, List, Button } from "tabler-react";
 import AuthService from "../core/AuthService";
@@ -37,7 +36,6 @@ const navBarItems: Array<navItem> = [
       {
         value: "Project",
         to: "/projects",
-        // LinkComponent: withRouter(NavLink),
       },
     ],
   },
@@ -69,11 +67,9 @@ class SiteWrapper extends React.Component<Props, void> {
   render(): React.Node {
     let authService = new AuthService()
     let token =  authService.currentToken();
-    console.log('token',token);
     accountDropdownProps.name = token.name;
     accountDropdownProps.description = token.roles.join(',');
     let avatarId = md5(token.email.toLowerCase());
-  console.log(avatarId);
     accountDropdownProps.avatarURL = `https://en.gravatar.com/avatar/${avatarId}.jpeg?d=retro`;
 
     return (
