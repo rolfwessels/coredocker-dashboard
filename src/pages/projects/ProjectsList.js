@@ -5,7 +5,7 @@ import {
   Card,
   Text,
   Table,
-  Icon,
+  Button,
 } from "tabler-react";
 import EditDelete from '../../components/EditDelete';
 
@@ -46,7 +46,8 @@ export default class ProjectsList extends React.Component<Props> {
                   <Table.ColHeader>Updated</Table.ColHeader>
                   <Table.ColHeader>Id</Table.ColHeader>
                   <Table.ColHeader alignContent="center" className="w-1">
-                    <Icon prefix="fe" name="settings" />
+
+
                   </Table.ColHeader >
                 </Table.Row>
               </Table.Header>
@@ -67,7 +68,6 @@ export default class ProjectsList extends React.Component<Props> {
                     </Table.Col>
                     <Table.Col alignContent="center">
                       <EditDelete model={project} update={this.props.update} remove={this.props.remove} />
-
                     </Table.Col>
                   </Table.Row>
                 )}

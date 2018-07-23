@@ -4,7 +4,10 @@ import * as React from 'react';
 import SiteWrapper from "../../components/SiteWrapper";
 import {
   Page,
-
+  Button,
+  Text,
+  Dimmer,
+  Alert
 } from "tabler-react";
 import ProjectsList from './ProjectsList';
 import gql from '../../../node_modules/graphql-tag';
@@ -39,7 +42,8 @@ class ProjectsPage extends React.Component<Props> {
     this.apiService = new ApiService();
     this.state = {
       projects: [],
-      isLoading: true
+      isLoading: true,
+      error: '',
     };
   }
 
@@ -52,7 +56,14 @@ class ProjectsPage extends React.Component<Props> {
       .then(response => this.setState({
         projects: response.data.projects.all,
         isLoading: false
+      }))
+      .catch(response => this.setState({
+        error: "Failed to read projects from service."
       }));
+  }
+
+  add(project) {
+    document.location = `/project/add`;
   }
 
   update(project) {
@@ -61,17 +72,26 @@ class ProjectsPage extends React.Component<Props> {
 
   remove(project, callback) {
     this.apiService.mutate(DELETE_PROJECT, { projectId: project.id })
-      .then(response => this.refreshData());
+      .then(response => this.refreshData())
+      .catch(response => this.setState({
+        error: `Failed to remove project '${project.name}' from service.`
+      }));
   }
 
   render() {
     var { projects } = this.state;
     return (
       <SiteWrapper>
-        <Page.Content title="Projects">
-
-          <ProjectsList data={projects} update={(m, c) => this.update(m, c)} remove={(m, c) => this.remove(m, c)} />
+        <Page.Content title={(<Text> Projects <Button onClick={() => this.add()} color="secondary" icon="plus" /> </Text>)}>
+          {
+            this.state.isLoading
+              ? <Dimmer active loader></Dimmer>
+              : <ProjectsList data={projects} update={(m, c) => this.update(m, c)} remove={(m, c) => this.remove(m, c)} />
+          }
+          {this.state.error && <Alert type="danger">{this.state.error}</Alert>}
         </Page.Content>
+
+
       </SiteWrapper>
     );
   }

@@ -12,13 +12,7 @@ import SiteWrapper from "../../components/SiteWrapper";
 import gql from '../../../node_modules/graphql-tag';
 import { Formik } from "formik";
 
-const INSERT_PROJECT = gql`mutation {
-  projects {
-    insert(project : {name : "casd"}) {
-      id
-    }
-  }
-}`;
+
 
 const GET_PROJECT = gql`
   query getProject($id : String!){
@@ -31,6 +25,17 @@ const GET_PROJECT = gql`
     }
   }
 `;
+const INSERT_PROJECT = gql`mutation insertProject($projectName: String) {
+  projects {
+    insert(
+      project : {
+          name:$projectName
+        })
+    {
+      id
+    }
+  }
+}`;
 
 const UPDATE_PROJECT = gql`mutation updateProject($id : String!, $projectName: String) {
   projects {
@@ -54,22 +59,32 @@ export default class ProjectUpdatePage extends Component {
     this.apiService = new ApiService();
     this.state = {
       project: {},
-      isLoading: true,
+      isLoading: false,
       error: '',
     };
   }
 
   componentDidMount() {
     this.routeId = this.props.match.params.id;
-    this.loadData(this.routeId);
+    if (!this.isAdd())
+      this.loadData(this.routeId);
+  }
+
+  isAdd() {
+    return this.routeId === 'add';
   }
 
   loadData(id) {
+    this.setState({isLoading:true});
     this.apiService.query(GET_PROJECT, { id: id })
       .then(response => this.setState({
         project: response.data.projects.byId,
+        error:   response.data.projects.byId === null? `Failed could not load project with id '${id}'.` : '',
         isLoading: false
-      }));
+      }))
+      .catch(response => this.setState({
+        error: `Failed could not load project with id '${id}'.`
+      }));;
   }
 
   onCancel(props, result) {
@@ -78,8 +93,9 @@ export default class ProjectUpdatePage extends Component {
   }
 
   onSave(props, result) {
+
     this.setState({error:""})
-    this.apiService.mutate(UPDATE_PROJECT, {
+    this.apiService.mutate( this.isAdd() ? INSERT_PROJECT : UPDATE_PROJECT, {
       id: props.id ,
       projectName : props.name,
     })
@@ -124,7 +140,7 @@ export default class ProjectUpdatePage extends Component {
                   <Form.Footer>
                     <Button.List>
                       <Button type="button" onClick={(e) => this.onCancel(e)} outline color="secondary" name="cancel"  >cancel</Button>
-                      <Button type="submit" color="primary" name="save" disabled={isSubmitting}>Save</Button>
+                      <Button type="submit" color="primary" name="save" loading={isSubmitting} disabled={isSubmitting}>Save</Button>
                     </Button.List>
                   </Form.Footer>
                 </Form>

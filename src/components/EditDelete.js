@@ -38,7 +38,7 @@ export default class EditDelete extends Component {
         {this.state.markedForRemoval[this.props.model.id] && (
           <span>
             <Icon prefix="fe" name="x" onClick={() => this.markedForRemoval(this.props.model, false)} />
-            <Icon prefix="fe" name="delete" onClick={() => { this.props.remove(this.props.model, () => this.markedForRemoval(this.props.model, false)); }} />
+            <Icon prefix="fe" name="trash-2" onClick={() => { this.props.remove(this.props.model, () => this.markedForRemoval(this.props.model, false)); }} />
           </span>
         )}
       </div>
