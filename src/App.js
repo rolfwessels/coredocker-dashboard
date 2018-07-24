@@ -28,11 +28,11 @@ class App extends React.Component<Props> {
     return (
       <Router basename={process.env.PUBLIC_URL}>
         <Switch>
-
+          <Route exact path="/login" component={LoginPage} />
           <Route exact path="/"  render={(routeProps) => ( this.isLoggedIn() ? (<DashboardPage   {...routeProps} />):(<Redirect to="/login"/>) )} />
           <Route path="/projects/"  render={(routeProps) => ( this.isLoggedIn() ? (<ProjectsPage  {...routeProps}/>):(<Redirect to="/login"/>) )}/>
           <Route path="/project/:id"  render={(routeProps) => ( this.isLoggedIn() ? (<ProjectUpdatePage  {...routeProps}/>):(<Redirect to="/login"/>) )}/>
-          <Route exact path="/login" component={LoginPage} />
+
           <Route component={Error404} />
         </Switch>
       </Router>

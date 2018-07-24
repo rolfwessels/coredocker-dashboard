@@ -155,8 +155,8 @@ export default class ProjectUpdatePage extends React.Component<Props, State> {
                   </Form.Group>
                   <Form.Footer>
                     <Button.List>
-                      <Button type="button" onClick={(e) => this.onCancel(e)} outline color="secondary" name="cancel"  >cancel</Button>
-                      <Button type="submit" color="primary" name="save" loading={isSubmitting} disabled={isSubmitting}>Save</Button>
+                      <Button type="button" onClick={(e) => this.onCancel(e)} outline color="secondary">cancel</Button>
+                      <Button type="submit" color="primary"  loading={isSubmitting} disabled={isSubmitting}>Save</Button>
                     </Button.List>
                   </Form.Footer>
                 </Form>
@@ -180,3 +180,42 @@ export default class ProjectUpdatePage extends React.Component<Props, State> {
   }
 }
 
+
+/* scaffolding [
+    {
+      "FileName": "src\\App.js",
+      "Indexline": "Route component",
+      "InsertAbove": true,
+      "InsertInline": false,
+      "Lines": [
+        "<Route path=\"/project/:id\"  render={(routeProps) => ( this.isLoggedIn() ? (<ProjectUpdatePage  {...routeProps}/>):(<Redirect to=\"/login\"/>) )}/>"
+      ]
+    },
+    {
+      "FileName": "src\\App.js",
+      "Indexline": "ProjectUpdatePage,",
+      "InsertAbove": false,
+      "InsertInline": false,
+      "Lines": [
+        "ProjectUpdatePage,"
+      ]
+    },
+    {
+      "FileName": "pages\\index.js",
+      "Indexline": "import Error404",
+      "InsertAbove": true,
+      "InsertInline": false,
+      "Lines": [
+        "import ProjectUpdatePage from \"./projects/ProjectUpdatePage\";"
+      ]
+    },
+    {
+      "FileName": "pages\\index.js",
+      "Indexline": "Error404,",
+      "InsertAbove": true,
+      "InsertInline": false,
+      "Lines": [
+        "ProjectUpdatePage,"
+      ]
+    },
+] scaffolding */

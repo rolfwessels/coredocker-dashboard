@@ -10,6 +10,7 @@ import {
 } from "tabler-react";
 import EditDelete from '../../components/EditDelete';
 import { Project } from './ProjectTypes';
+import ShortId from '../../components/ShortId';
 
 type Props = {
   projects: Project[];
@@ -36,9 +37,9 @@ export default class ProjectsList extends React.Component<Props> {
             >
               <Table.Header>
                 <Table.Row>
+                  <Table.ColHeader className="w-1">Id</Table.ColHeader>
                   <Table.ColHeader>Name</Table.ColHeader>
                   <Table.ColHeader>Updated</Table.ColHeader>
-                  <Table.ColHeader>Id</Table.ColHeader>
                   <Table.ColHeader alignContent="center" className="w-1">
 
 
@@ -49,16 +50,16 @@ export default class ProjectsList extends React.Component<Props> {
               <Table.Body>
                 {projects.map((project) =>
                   <Table.Row key={project.id}>
+                   <Table.Col>
+                      <Text.Small muted>
+                        <ShortId id={project.id} />
+                      </Text.Small>
+                    </Table.Col>
                     <Table.Col>
                       {project.name}
                     </Table.Col>
                     <Table.Col>
                       <TimeAgo date={project.updateDate} />
-                    </Table.Col>
-                    <Table.Col>
-                      <Text.Small muted>
-                        {project.id}
-                      </Text.Small>
                     </Table.Col>
                     <Table.Col alignContent="center">
                       <EditDelete model={project} update={this.props.update} remove={this.props.remove} />

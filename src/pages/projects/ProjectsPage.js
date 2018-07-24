@@ -102,11 +102,110 @@ class ProjectsPage extends React.Component<Props, State> {
           }
           {this.state.error && <Alert type="danger">{this.state.error}</Alert>}
         </Page.Content>
-
-
       </SiteWrapper>
     );
   }
 }
 
 export default ProjectsPage;
+
+/* scaffolding [
+    {
+      "FileName": "src\\App.js",
+      "Indexline": "Route component",
+      "InsertAbove": true,
+      "InsertInline": false,
+      "Lines": [
+        "<Route path=\"/projects/\"  render={(routeProps) => ( this.isLoggedIn() ? (<ProjectsPage  {...routeProps}/>):(<Redirect to=\"/login\"/>) )}/>"
+      ]
+    },
+    {
+      "FileName": "src\\App.js",
+      "Indexline": "ProjectsPage,",
+      "InsertAbove": false,
+      "InsertInline": false,
+      "Lines": [
+        "ProjectsPage,"
+      ]
+    },
+    {
+      "FileName": "pages\\index.js",
+      "Indexline": "import ProjectsPage from",
+      "InsertAbove": false,
+      "InsertInline": false,
+      "Lines": [
+        "import ProjectsPage from \"./projects/ProjectsPage\";"
+      ]
+    },
+    {
+      "FileName": "pages\\index.js",
+      "Indexline": "ProjectsPage,",
+      "InsertAbove": false,
+      "InsertInline": false,
+      "Lines": [
+        "ProjectsPage,"
+      ]
+    },
+    {
+      "FileName": "SiteWrapper.js",
+      "Indexline": "{ value: \"Project\", to: \"/projects\" },",
+      "InsertAbove": false,
+      "InsertInline": false,
+      "Lines": [
+        "{ value: \"Project\", to: \"/projects\" },"
+      ]
+    },
+    {
+      "FileName": "DashboardPage.js",
+      "Indexline": "projects { query { count } }",
+      "InsertAbove": false,
+      "InsertInline": false,
+      "Lines": [
+        "projects { query { count } }"
+      ]
+    },
+    {
+      "FileName": "DashboardPage.js",
+      "Indexline": "projectsCount: number,",
+      "InsertAbove": false,
+      "InsertInline": false,
+      "Lines": [
+        "projectsCount: number,"
+      ]
+    },
+    {
+      "FileName": "DashboardPage.js",
+      "Indexline": "projectsCount: 0,",
+      "InsertAbove": false,
+      "InsertInline": false,
+      "Lines": [
+        "projectsCount: 0,"
+      ]
+    },
+    {
+      "FileName": "DashboardPage.js",
+      "Indexline": "projectsCount: response.data.projects.query.count,",
+      "InsertAbove": false,
+      "InsertInline": false,
+      "Lines": [
+        "projectsCount: response.data.projects.query.count,"
+      ]
+    },
+    {
+      "FileName": "DashboardPage.js",
+      "Indexline": "{\/* More *\/}",
+      "InsertAbove": true,
+      "InsertInline": false,
+      "Lines": [
+        "<Grid.Col sm={6} lg={3}>",
+        "  <StampCard color=\"blue\" icon=\"dollar-sign\"",
+        "    header={",
+        "      <a href=\"/projects\" >",
+        "        {this.state.projectsCount} <small>Projects</small>",
+        "      </a>",
+        "    }",
+        "  />",
+        "</Grid.Col>",
+      ]
+    },
+] scaffolding */
