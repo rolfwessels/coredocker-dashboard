@@ -1,4 +1,4 @@
-// @flow strict
+// @flow
 
 import AppSettings from './AppSettings';
 import { jsonFetch } from './ApiService';
