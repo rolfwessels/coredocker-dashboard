@@ -1,19 +1,26 @@
-// @flow strict
+// @flow
 
 import * as React from 'react';
 import SiteWrapper from "../../components/SiteWrapper";
 import {
   Page,
   Button,
-  Text,
   Dimmer,
-  Alert
+  Alert,
+  Header,
 } from "tabler-react";
 import ProjectsList from './ProjectsList';
 import gql from '../../../node_modules/graphql-tag';
 import ApiService from '../../core/ApiService';
+import { Project } from './ProjectTypes';
 
 type Props = {||};
+
+type State = {
+  projects: Project[],
+  isLoading: bool,
+  error: string,
+};
 
 const GET_PROJECTS = gql`
   {
@@ -33,18 +40,17 @@ const DELETE_PROJECT = gql`mutation projectsDelete($projectId: String!) {
   }
 }`;
 
-class ProjectsPage extends React.Component<Props> {
+class ProjectsPage extends React.Component<Props, State> {
   apiService: ApiService
-
+  state = {
+    projects: [],
+    isLoading: true,
+    error: '',
+  };
 
   constructor() {
     super();
     this.apiService = new ApiService();
-    this.state = {
-      projects: [],
-      isLoading: true,
-      error: '',
-    };
   }
 
   componentDidMount() {
@@ -62,17 +68,20 @@ class ProjectsPage extends React.Component<Props> {
       }));
   }
 
-  add(project) {
-    document.location = `/project/add`;
+  add() {
+    window.location = '/project/add';
   }
 
-  update(project) {
-    document.location = `/project/${project.id}`;
+  update(project: Project) {
+    window.location = `/project/${project.id}`;
   }
 
-  remove(project, callback) {
+  remove(project: Project, callback: any) {
     this.apiService.mutate(DELETE_PROJECT, { projectId: project.id })
-      .then(response => this.refreshData())
+      .then(response => {
+        this.refreshData();
+        callback();
+      })
       .catch(response => this.setState({
         error: `Failed to remove project '${project.name}' from service.`
       }));
@@ -82,11 +91,12 @@ class ProjectsPage extends React.Component<Props> {
     var { projects } = this.state;
     return (
       <SiteWrapper>
-        <Page.Content title={(<Text> Projects <Button onClick={() => this.add()} color="secondary" icon="plus" /> </Text>)}>
+        <Page.Content>
+          <Header.H1>Projects<span style={{ 'margin-left': '15px' }}> <Button onClick={() => this.add()} color="secondary" icon="plus" /></span></Header.H1>
           {
             this.state.isLoading
               ? <Dimmer active loader></Dimmer>
-              : <ProjectsList data={projects} update={(m, c) => this.update(m, c)} remove={(m, c) => this.remove(m, c)} />
+              : <ProjectsList projects={projects} update={(m, c) => this.update(m)} remove={(m, c) => this.remove(m, c)} />
           }
           {this.state.error && <Alert type="danger">{this.state.error}</Alert>}
         </Page.Content>

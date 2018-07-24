@@ -1,18 +1,18 @@
-import React, { Component } from 'react'
+// @flow
+
+import React from 'react'
 import {
   Page,
   Form,
   Button,
   Card,
   Dimmer,
-  Alert,
 } from "tabler-react";
 import ApiService from '../../core/ApiService';
 import SiteWrapper from "../../components/SiteWrapper";
 import gql from '../../../node_modules/graphql-tag';
 import { Formik } from "formik";
-
-
+import { Project } from './ProjectTypes';
 
 const GET_PROJECT = gql`
   query getProject($id : String!){
@@ -25,6 +25,7 @@ const GET_PROJECT = gql`
     }
   }
 `;
+
 const INSERT_PROJECT = gql`mutation insertProject($projectName: String) {
   projects {
     insert(
@@ -50,18 +51,26 @@ const UPDATE_PROJECT = gql`mutation updateProject($id : String!, $projectName: S
   }
 }`;
 
-export default class ProjectUpdatePage extends Component {
+type Props = {||};
+
+type State = {
+  projects: Project,
+  isLoading: bool,
+  error: string,
+};
+
+export default class ProjectUpdatePage extends React.Component<Props, State> {
 
   routeId: string;
+  state = {
+    project: {},
+    isLoading: false,
+    error: '',
+  };
 
   constructor() {
     super();
     this.apiService = new ApiService();
-    this.state = {
-      project: {},
-      isLoading: false,
-      error: '',
-    };
   }
 
   componentDidMount() {
@@ -163,3 +172,4 @@ export default class ProjectUpdatePage extends Component {
     )
   }
 }
+

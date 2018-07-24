@@ -7,7 +7,15 @@ import AuthService from "../../core/AuthService";
 import { LoginPage as TablerLoginPage } from "tabler-react";
 import QueryString from "query-string";
 
-type Props = {||};
+type Props = {
+  location: Location
+};
+
+type LoginData = {
+  email: string,
+  password: string,
+};
+
 
 class LoginPage extends React.Component<Props> {
 
@@ -17,14 +25,14 @@ class LoginPage extends React.Component<Props> {
     this.authService = new AuthService();
   }
 
-  onLogin(values,{ setSubmitting, setErrors /* setValues and other goodies */ }  )
+  onLogin(values: LoginData,{ setSubmitting , setErrors  } :any )
   {
 
     setSubmitting(true);
     this.authService.login(values.email,values.password).then((t) =>{
       console.log('login done');
       setSubmitting(false);
-      document.location = "/";
+      window.location = '/';
     },(e)=>{
       console.error("error logging  in",e);
       setSubmitting(false);

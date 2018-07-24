@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react'
 import TimeAgo from 'react-timeago'
 import {
@@ -5,28 +7,20 @@ import {
   Card,
   Text,
   Table,
-  Button,
 } from "tabler-react";
 import EditDelete from '../../components/EditDelete';
+import { Project } from './ProjectTypes';
 
-type Props = {||};
+type Props = {
+  projects: Project[];
+  update(project: Project) : void;
+  remove(project: Project, callback: any) : void;
+}
 
 export default class ProjectsList extends React.Component<Props> {
 
-  constructor() {
-    super();
-    this.state = {
-      data: [],
-    };
-
-  }
-
-  activateLasers(params) {
-    console.log('params', params);
-  }
-
   render() {
-    const { data } = this.props;
+    const { projects } = this.props;
 
     return (
       <Grid.Row cards deck>
@@ -53,7 +47,7 @@ export default class ProjectsList extends React.Component<Props> {
               </Table.Header>
 
               <Table.Body>
-                {data.map((project) =>
+                {projects.map((project) =>
                   <Table.Row key={project.id}>
                     <Table.Col>
                       {project.name}
