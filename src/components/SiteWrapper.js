@@ -33,6 +33,7 @@ const navBarItems: Array<navItem> = [
     value: "Details", icon: "box",
     subItems: [
       { value: "Project", to: "/projects" },
+      { value: "User", to: "/users" },
     ],
   },
 ];

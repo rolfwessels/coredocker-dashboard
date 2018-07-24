@@ -6,7 +6,9 @@ import {
   LoginPage,
   DashboardPage,
   ProjectsPage,
+  UsersPage,
   ProjectUpdatePage,
+  UserUpdatePage,
   Error404,
 } from "./pages/";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
@@ -33,6 +35,8 @@ class App extends React.Component<Props> {
           <Route path="/projects/"  render={(routeProps) => ( this.isLoggedIn() ? (<ProjectsPage  {...routeProps}/>):(<Redirect to="/login"/>) )}/>
           <Route path="/project/:id"  render={(routeProps) => ( this.isLoggedIn() ? (<ProjectUpdatePage  {...routeProps}/>):(<Redirect to="/login"/>) )}/>
 
+          <Route path="/users/"  render={(routeProps) => ( this.isLoggedIn() ? (<UsersPage  {...routeProps}/>):(<Redirect to="/login"/>) )}/>
+          <Route path="/user/:id"  render={(routeProps) => ( this.isLoggedIn() ? (<UserUpdatePage  {...routeProps}/>):(<Redirect to="/login"/>) )}/>
           <Route component={Error404} />
         </Switch>
       </Router>

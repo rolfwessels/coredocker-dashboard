@@ -18,11 +18,13 @@ type State = {
   isLoading: bool,
   error: string,
   projectsCount: number,
+  usersCount: number,
 };
 
 const GET_COUNTS = gql`
   {
     projects { query { count } }
+    users { query { count } }
   }
 `;
 
@@ -31,6 +33,7 @@ class DashboardPage extends React.Component<Props, State> {
   apiService: ApiService
   state = {
     projectsCount: 0,
+    usersCount: 0,
     isLoading: true,
     error: '',
   };
@@ -47,6 +50,7 @@ class DashboardPage extends React.Component<Props, State> {
     this.apiService.query(GET_COUNTS)
       .then(response => this.setState({
         projectsCount: response.data.projects.query.count,
+        usersCount: response.data.users.query.count,
         isLoading: false,
         error: ""
       }))
@@ -66,10 +70,19 @@ class DashboardPage extends React.Component<Props, State> {
               : (
                 <Grid.Row cards={true}>
                   <Grid.Col sm={6} lg={3}>
-                    <StampCard color="blue" icon="dollar-sign"
+                    <StampCard color="blue" icon="server"
                       header={
                         <a href="/projects" >
                           {this.state.projectsCount} <small>Projects</small>
+                        </a>
+                      }
+                    />
+                  </Grid.Col>
+                  <Grid.Col sm={6} lg={3}>
+                    <StampCard color="green" icon="user"
+                      header={
+                        <a href="/users" >
+                          {this.state.usersCount} <small>Users</small>
                         </a>
                       }
                     />
