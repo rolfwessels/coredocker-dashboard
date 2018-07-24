@@ -7,9 +7,9 @@ import DeviceStorage from 'react-device-storage';
 import gql from "graphql-tag";
 
 class Token {
-  access_token: string;
+  access_token: ?string;
   email: string;
-  expires: date;
+  expires: Date;
   id: string;
   name: string;
   roles: string[];
@@ -21,7 +21,7 @@ class Token {
   }
 };
 
-export const loadToken : Token = () => {
+export const loadToken = () : Token => {
   return Object.assign(new Token(), storage.read('authServiceToken')) || new Token();
 }
 
@@ -46,12 +46,14 @@ const GET_USER_ME =gql`
 export default class AuthService {
   url: string = "";
   urlToken: string = "";
-  config: Any;
-  token: Token = {};
+  config: any;
+  token: Token = new Token();
+  storage : DeviceStorage;
+  apiService : ApiService;
   constructor() {
-    const settings = new AppSettings();
-    this.url = settings.ApiEndPoint();
-    this.urlToken = settings.ApiEndPoint() + "/connect/token";
+
+    this.url = AppSettings.ApiEndPoint();
+    this.urlToken = AppSettings.ApiEndPoint() + "/connect/token";
     this.storage = storage;
     this.apiService = new ApiService();
     this.token = loadToken();
@@ -75,7 +77,7 @@ export default class AuthService {
     return this.token;
   }
 
-  serialize(obj) {
+  serialize(obj: any) {
     return Object.keys(obj).reduce(function (a, k) { a.push(k + '=' + encodeURIComponent(obj[k])); return a }, []).join('&')
   }
 
@@ -123,12 +125,12 @@ export default class AuthService {
     token.expires = new Date();
     token.name = '';
     token.email = '';
-    token.roles = '';
+    token.roles = [];
     token.id = '';
     this.storeToken(token)
   }
 
-  storeToken(token: Token) {
+  storeToken(token: any) {
     this.token = Object.assign(this.token,token);
     this.storage.save('authServiceToken', this.token);
   }

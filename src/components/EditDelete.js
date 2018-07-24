@@ -1,19 +1,32 @@
+
+// @flow
+
 import React, { Component } from 'react'
 import {
   Icon,
 } from "tabler-react";
+import { WithId } from './DefaultTypes';
 
 
-export default class EditDelete extends Component {
 
-  constructor() {
-    super();
-    this.state = {
-      markedForRemoval: {},
-    };
-  }
+type Props = {
+  model : WithId;
+  update(project: WithId) : void;
+  remove(project: WithId, callback: any) : void;
+};
 
-  markedForRemoval(model, isMarked: bool) {
+type State = {
+  markedForRemoval: any
+};
+
+
+
+export default class EditDelete extends Component<Props, State> {
+  state = {
+    markedForRemoval: {},
+  };
+
+  markedForRemoval(model: any, isMarked: bool) {
     var update = {}
     update[model.id] = isMarked;
     console.log('update', update);

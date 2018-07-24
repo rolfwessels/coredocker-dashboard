@@ -61,9 +61,11 @@ class ProjectsPage extends React.Component<Props, State> {
     this.apiService.query(GET_PROJECTS)
       .then(response => this.setState({
         projects: response.data.projects.all,
-        isLoading: false
+        isLoading: false,
+        error: ""
       }))
       .catch(response => this.setState({
+        isLoading: false,
         error: "Failed to read projects from service."
       }));
   }
@@ -92,7 +94,7 @@ class ProjectsPage extends React.Component<Props, State> {
     return (
       <SiteWrapper>
         <Page.Content>
-          <Header.H1>Projects<span style={{ 'margin-left': '15px' }}> <Button onClick={() => this.add()} color="secondary" icon="plus" /></span></Header.H1>
+          <Header.H1>Projects<span style={{ 'marginLeft': '15px' }}> <Button onClick={() => this.add()} color="secondary" icon="plus" /></span></Header.H1>
           {
             this.state.isLoading
               ? <Dimmer active loader></Dimmer>

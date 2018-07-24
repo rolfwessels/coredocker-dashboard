@@ -12,7 +12,7 @@ import ApiService from '../../core/ApiService';
 import SiteWrapper from "../../components/SiteWrapper";
 import gql from '../../../node_modules/graphql-tag';
 import { Formik } from "formik";
-import { Project } from './ProjectTypes';
+import { Project, ProjectCreateUpdate } from './ProjectTypes';
 
 const GET_PROJECT = gql`
   query getProject($id : String!){
@@ -51,10 +51,14 @@ const UPDATE_PROJECT = gql`mutation updateProject($id : String!, $projectName: S
   }
 }`;
 
-type Props = {||};
+
+type Props = {
+  history: any,
+  match: any
+};
 
 type State = {
-  projects: Project,
+  project: Project,
   isLoading: bool,
   error: string,
 };
@@ -62,8 +66,9 @@ type State = {
 export default class ProjectUpdatePage extends React.Component<Props, State> {
 
   routeId: string;
+  apiService: ApiService;
   state = {
-    project: {},
+    project: new Project(),
     isLoading: false,
     error: '',
   };
@@ -83,25 +88,26 @@ export default class ProjectUpdatePage extends React.Component<Props, State> {
     return this.routeId === 'add';
   }
 
-  loadData(id) {
+  loadData(id: string) {
     this.setState({isLoading:true});
     this.apiService.query(GET_PROJECT, { id: id })
       .then(response => this.setState({
         project: response.data.projects.byId,
         error:   response.data.projects.byId === null? `Failed could not load project with id '${id}'.` : '',
-        isLoading: false
+        isLoading: false,
       }))
       .catch(response => this.setState({
+        isLoading: false,
         error: `Failed could not load project with id '${id}'.`
       }));;
   }
 
-  onCancel(props, result) {
+  onCancel(props: any, result: any) {
     props.preventDefault();
     this.props.history.goBack();
   }
 
-  onSave(props, result) {
+  onSave(props: any, result: any) {
 
     this.setState({error:""})
     this.apiService.mutate( this.isAdd() ? INSERT_PROJECT : UPDATE_PROJECT, {
@@ -110,6 +116,7 @@ export default class ProjectUpdatePage extends React.Component<Props, State> {
     })
     .then(response => {
       result.setSubmitting( false);
+      this.setState({error:""})
       this.props.history.goBack();
     }).catch((x,z)=>{
       result.setSubmitting( false);
@@ -117,7 +124,7 @@ export default class ProjectUpdatePage extends React.Component<Props, State> {
     });
   }
 
-  validate(values) {
+  validate(values: ProjectCreateUpdate) {
     let errors = {};
     if (!values.name) {
       errors.name = "Name is required.";
@@ -163,7 +170,7 @@ export default class ProjectUpdatePage extends React.Component<Props, State> {
             <Card.Body>
               {this.state.isLoading?(<Dimmer active loader></Dimmer>): mainForm}
             </Card.Body>
-            {this.state.error && (<Card.Alert color="danger" hasExtraSpace>
+            {this.state.error && (<Card.Alert color="danger"  >
               <strong>Whoops!</strong> {this.state.error}
             </Card.Alert>)}
           </Card>

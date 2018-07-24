@@ -6,15 +6,18 @@ import { createHttpLink } from 'apollo-link-http';
 import AppSettings from "./AppSettings";
 import { loadToken } from "./AuthService";
 
+class ErrorFetch extends Error {
+  full : any;
+}
 
-export function jsonFetch(fetch) {
+export function jsonFetch(fetch: Promise<any>) : Promise<any> {
   return fetch
     .then(response => {
       if (response.ok) {
         return response;
       } else {
         return response.json().then(errorMessage => {
-          let error = new Error(errorMessage.error);
+          let error = new ErrorFetch(errorMessage.error);
           error.full = errorMessage;
           console.error(`Error in fetch: ${response.status} ${errorMessage.error} ${errorMessage.error_description}`);
           throw (error);
@@ -30,7 +33,7 @@ export function jsonFetch(fetch) {
 }
 
 const httpLink = createHttpLink({
-  uri: new AppSettings().ApiEndPoint() + "/graphql",
+  uri: AppSettings.ApiEndPoint() + "/graphql",
 });
 
 
@@ -39,7 +42,7 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token.access_token}` : "",
+      authorization: token ? `Bearer ${String(token.access_token)}` : "",
     }
   }
 });
@@ -55,28 +58,29 @@ const defaultOptions = {
   },
 }
 
-const graphql: ApolloClient = new ApolloClient({
+const _graphql: ApolloClient = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
   defaultOptions: defaultOptions,
 });
+
 
 class ApiService {
 
   graphql: ApolloClient;
 
   constructor() {
-    this.graphql = graphql;
+    this.graphql = _graphql;
   }
 
-  query(query,variables) {
+  query(query: any,variables: any) {
     return this.graphql.query({
       query : query,
       variables: variables
     })
   }
 
-  mutate(mutation,variables) {
+  mutate(mutation: any,variables: any) {
 
     return this.graphql.mutate({
       mutation : mutation,
