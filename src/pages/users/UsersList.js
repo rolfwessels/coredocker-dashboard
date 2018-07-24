@@ -39,6 +39,8 @@ export default class UsersList extends React.Component<Props> {
                 <Table.Row>
                   <Table.ColHeader className="w-1">Id</Table.ColHeader>
                   <Table.ColHeader>Name</Table.ColHeader>
+                  <Table.ColHeader>Email</Table.ColHeader>
+                  <Table.ColHeader>Roles</Table.ColHeader>
                   <Table.ColHeader>Updated</Table.ColHeader>
                   <Table.ColHeader alignContent="center" className="w-1">
 
@@ -57,6 +59,12 @@ export default class UsersList extends React.Component<Props> {
                     </Table.Col>
                     <Table.Col>
                       {user.name}
+                    </Table.Col>
+                    <Table.Col>
+                      {user.email}
+                    </Table.Col>
+                    <Table.Col>
+                      {user.roles}
                     </Table.Col>
                     <Table.Col>
                       <TimeAgo date={user.updateDate} />

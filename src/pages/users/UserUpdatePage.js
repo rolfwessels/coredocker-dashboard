@@ -20,17 +20,21 @@ const GET_PROJECT = gql`
       byId(id:$id){
         id,
         name,
+        email,
+        roles,
         updateDate
       }
     }
   }
 `;
 
-const INSERT_PROJECT = gql`mutation insertUser($userName: String) {
+const INSERT_PROJECT = gql`mutation insertUser($userName: String,$userEmail: String,$userRoles: [String!]!) {
   users {
     insert(
       user : {
-          name:$userName
+          name:$userName,
+          email:$userEmail,
+          roles:$userRoles,
         })
     {
       id
@@ -113,6 +117,8 @@ export default class UserUpdatePage extends React.Component<Props, State> {
     this.apiService.mutate( this.isAdd() ? INSERT_PROJECT : UPDATE_PROJECT, {
       id: props.id ,
       userName : props.name,
+      userEmail : props.email,
+      userRoles : props.roles,
     })
     .then(response => {
       result.setSubmitting( false);
@@ -151,7 +157,14 @@ export default class UserUpdatePage extends React.Component<Props, State> {
                   <Form.Group>
                     <Form.Label>Name</Form.Label>
                     <Form.Input  name="name" value={values.name} onChange={handleChange} invalid={touched.name && errors.name} feedback={touched.name && errors.name } />
-                    {/* invalid placeholder="Is Invalid" */}
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.Label>Email</Form.Label>
+                    <Form.Input  name="email" value={values.email} onChange={handleChange} invalid={touched.email && errors.email} feedback={touched.email && errors.email } />
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.Label>Roles</Form.Label>
+                    <Form.Input  name="roles" value={values.roles} onChange={handleChange} invalid={touched.roles && errors.roles} feedback={touched.roles && errors.roles } />
                   </Form.Group>
                   <Form.Footer>
                     <Button.List>

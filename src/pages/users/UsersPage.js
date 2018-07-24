@@ -28,6 +28,8 @@ const GET_PROJECTS = gql`
       all {
         id,
         name,
+        email,
+        roles,
         updateDate
       }
     }
