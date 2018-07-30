@@ -118,9 +118,13 @@ export default class ProjectUpdatePage extends React.Component<Props, State> {
       result.setSubmitting( false);
       this.setState({error:""})
       this.props.history.goBack();
-    }).catch((x,z)=>{
+    }).catch((ex)=>{
       result.setSubmitting( false);
-      this.setState({error:"Failed to apply the update."})
+      const message = this.apiService.cleanErrorMessage(ex)
+      console.error(ex);
+      this.isAdd()
+      ? this.setState({error:`Failed to add project: ${message}`})
+      : this.setState({error:`Failed to update project. ${message}`})
     });
   }
 

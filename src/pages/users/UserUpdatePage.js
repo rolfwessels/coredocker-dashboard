@@ -28,7 +28,7 @@ const GET_PROJECT = gql`
   }
 `;
 
-const INSERT_PROJECT = gql`mutation insertUser($userName: String,$userEmail: String,$userRoles: [String!]!) {
+const INSERT_PROJECT = gql`mutation insertUser($userName: String!,$userEmail: String!,$userRoles: [String!]) {
   users {
     insert(
       user : {
@@ -42,13 +42,15 @@ const INSERT_PROJECT = gql`mutation insertUser($userName: String,$userEmail: Str
   }
 }`;
 
-const UPDATE_PROJECT = gql`mutation updateUser($id : String!, $userName: String) {
+const UPDATE_PROJECT = gql`mutation updateUser($id : String!, $userName: String!,$userEmail: String!,$userRoles: [String!]) {
   users {
     update(
       id:$id,
       user : {
-          name:$userName
-        })
+        name:$userName,
+        email:$userEmail,
+        roles:$userRoles,
+      })
     {
       id
     }
@@ -124,9 +126,13 @@ export default class UserUpdatePage extends React.Component<Props, State> {
       result.setSubmitting( false);
       this.setState({error:""})
       this.props.history.goBack();
-    }).catch((x,z)=>{
+    }).catch((ex)=>{
       result.setSubmitting( false);
-      this.setState({error:"Failed to apply the update."})
+      const message = this.apiService.cleanErrorMessage(ex)
+      console.error(ex);
+      this.isAdd()
+      ? this.setState({error:`Failed to add user: ${message}`})
+      : this.setState({error:`Failed to update user. ${message}`})
     });
   }
 
@@ -135,10 +141,19 @@ export default class UserUpdatePage extends React.Component<Props, State> {
     if (!values.name) {
       errors.name = "Name is required.";
     }
+    if (!values.email) {
+      errors.email = "Email is required.";
+    }
     return errors;
   }
 
+  updateCheckBoxes(update: any) {
+    console.log('update',update);
+  }
+
+
   render() {
+    const roles = ["Admin","Guest"];
     const mainForm = (
       <Formik
             initialValues={this.state.user}
@@ -152,6 +167,7 @@ export default class UserUpdatePage extends React.Component<Props, State> {
               handleBlur,
               handleSubmit,
               isSubmitting,
+              setFieldValue,
             }) => (
                 <Form onSubmit={handleSubmit}>
                   <Form.Group>
@@ -162,10 +178,34 @@ export default class UserUpdatePage extends React.Component<Props, State> {
                     <Form.Label>Email</Form.Label>
                     <Form.Input  name="email" value={values.email} onChange={handleChange} invalid={touched.email && errors.email} feedback={touched.email && errors.email } />
                   </Form.Group>
-                  <Form.Group>
-                    <Form.Label>Roles</Form.Label>
-                    <Form.Input  name="roles" value={values.roles} onChange={handleChange} invalid={touched.roles && errors.roles} feedback={touched.roles && errors.roles } />
+
+                  <Form.Group label="Roles">
+                  { roles.map(ro => (
+                    <Form.Checkbox
+                      key={ro}
+                      label={ro}
+                      name="roles"
+                      value={ro}
+                      checked={values.roles !== undefined? values.roles.indexOf(ro) > -1 : false}
+                      onChange={() => {
+                        var valueRoles = values.roles||[];
+
+                        if (valueRoles.includes(ro)) {
+                          const nextValue = valueRoles.filter(
+                            value => value !== ro
+                          );
+                          setFieldValue('roles',nextValue);
+                        } else {
+                          const nextValue = valueRoles.concat(ro);
+                          setFieldValue('roles',nextValue);
+
+                        }
+                      }}
+                    />
+                  ))}
+
                   </Form.Group>
+
                   <Form.Footer>
                     <Button.List>
                       <Button type="button" onClick={(e) => this.onCancel(e)} outline color="secondary">cancel</Button>

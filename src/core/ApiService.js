@@ -88,6 +88,11 @@ class ApiService {
     })
   }
 
+  cleanErrorMessage(error: any) {
+    var err =  error.networkError.result.errors.map(x=>x.message);
+    return err.find(d=>true);
+  }
+
 
 }
 

@@ -6,18 +6,23 @@ import ApiService from './ApiService';
 import DeviceStorage from 'react-device-storage';
 import gql from "graphql-tag";
 
-class Token {
+export class Token {
   access_token: ?string;
   email: string;
   expires: Date;
   id: string;
   name: string;
   roles: string[];
+  activities: string[];
 
   isValid() {
     const expDate = new Date(this.expires)
     let loggedIn = this.access_token ? expDate > new Date() : false
     return loggedIn;
+  }
+  hasAccess(activity: string) {
+    const isAllowed = this.activities.some(x => x === activity);
+    return isAllowed;
   }
 };
 
@@ -37,6 +42,9 @@ const GET_USER_ME =gql`
   users {
     me {
       name,email,roles,id
+    },
+    roles {
+      name,activities
     }
   }
 }`;
@@ -109,9 +117,11 @@ export default class AuthService {
         this.storeToken(token);
         return this.apiService.query(GET_USER_ME).then(result => {
           const me = result.data.users.me;
+          const roles = result.data.users.roles;
           token.name = me.name;
           token.email = me.email;
           token.roles = me.roles;
+          token.activities = roles.filter(x=> me.roles.some(r=>r === x.name )).map(x=>x.activities).reduce((a,b) => a.concat(b),[])
           token.id = me.id;
           this.storeToken(token);
         })
@@ -126,6 +136,7 @@ export default class AuthService {
     token.name = '';
     token.email = '';
     token.roles = [];
+    token.activities = [];
     token.id = '';
     this.storeToken(token)
   }
