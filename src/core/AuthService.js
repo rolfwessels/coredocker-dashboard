@@ -41,14 +41,10 @@ const GET_USER_ME =gql`
 {
   users {
     me {
-      name,email,roles,id
-    },
-    roles {
-      name,activities
+      name,email,roles,id,activities
     }
   }
 }`;
-
 
 
 export default class AuthService {
@@ -117,11 +113,10 @@ export default class AuthService {
         this.storeToken(token);
         return this.apiService.query(GET_USER_ME).then(result => {
           const me = result.data.users.me;
-          const roles = result.data.users.roles;
           token.name = me.name;
           token.email = me.email;
           token.roles = me.roles;
-          token.activities = roles.filter(x=> me.roles.some(r=>r === x.name )).map(x=>x.activities).reduce((a,b) => a.concat(b),[])
+          token.activities = me.activities;
           token.id = me.id;
           this.storeToken(token);
         })
