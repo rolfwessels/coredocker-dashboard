@@ -10,6 +10,7 @@ import {
   ProjectUpdatePage,
   UserUpdatePage,
   Error404,
+  RegisterPage,
 } from "./pages/";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import AuthService from "./core/AuthService"
@@ -31,6 +32,7 @@ class App extends React.Component<Props> {
       <Router basename={process.env.PUBLIC_URL}>
         <Switch>
           <Route exact path="/login" component={LoginPage} />
+          <Route exact path="/register" component={RegisterPage} />
           <Route exact path="/"  render={(routeProps) => ( this.isLoggedIn() ? (<DashboardPage   {...routeProps} />):(<Redirect to="/login"/>) )} />
           <Route path="/projects/"  render={(routeProps) => ( this.isLoggedIn() ? (<ProjectsPage  {...routeProps}/>):(<Redirect to="/login"/>) )}/>
           <Route path="/project/:id"  render={(routeProps) => ( this.isLoggedIn() ? (<ProjectUpdatePage  {...routeProps}/>):(<Redirect to="/login"/>) )}/>

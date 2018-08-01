@@ -5,6 +5,7 @@ import * as React from "react";
 import { Formik } from "formik";
 import AuthService from "../../core/AuthService";
 import { LoginPage as TablerLoginPage } from "tabler-react";
+import { Text } from "tabler-react";
 import QueryString from "query-string";
 
 type Props = {
@@ -19,28 +20,27 @@ type LoginData = {
 
 class LoginPage extends React.Component<Props> {
 
-  authService : AuthService
+  authService: AuthService
   constructor() {
     super();
     this.authService = new AuthService();
   }
 
-  onLogin(values: LoginData,{ setSubmitting , setErrors  } :any )
-  {
+  onLogin(values: LoginData, { setSubmitting, setErrors }: any) {
 
     setSubmitting(true);
-    this.authService.login(values.email,values.password).then((t) =>{
+    this.authService.login(values.email, values.password).then((t) => {
       console.log('login done');
       setSubmitting(false);
       window.location = '/';
-    },(e)=>{
-      console.error("error logging  in",e);
+    }, (e) => {
+      console.error("error logging  in", e);
       setSubmitting(false);
-      if (e.message=== "invalid_grant") {
-        setErrors({password: "Invalid username or password." });
+      if (e.message === "invalid_grant") {
+        setErrors({ password: "Invalid username or password." });
       }
       else
-        setErrors({password: "Could not valid user. Please try again later." });
+        setErrors({ password: "Could not valid user. Please try again later." });
 
     })
   }
@@ -70,7 +70,7 @@ class LoginPage extends React.Component<Props> {
           }
           return errors;
         }}
-        onSubmit={(props,result) => this.onLogin(props,result) }
+        onSubmit={(props, result) => this.onLogin(props, result)}
         render={({
           values,
           errors,
@@ -80,15 +80,22 @@ class LoginPage extends React.Component<Props> {
           handleSubmit,
           isSubmitting,
         }) => (
-          <TablerLoginPage
-            onSubmit={handleSubmit}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            values={values}
-            errors={errors}
-            touched={touched}
-          />
-        )}
+            <div>
+              <TablerLoginPage
+                onSubmit={handleSubmit}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                values={values}
+                errors={errors}
+                touched={touched}
+              />
+              <div style={{display:"block", textAlign:"center"}}>
+                <Text.Small muted>
+                  Don't have account yet? <a href="/register">Sign up</a>
+                </Text.Small>
+              </div>
+            </div>
+          )}
       />
     );
   }
