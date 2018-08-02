@@ -1,9 +1,11 @@
 // @flow
 
 import * as React from "react";
-import { NavLink, withRouter } from "react-router-dom";
 
 import { Site, Nav, Grid, List, Button } from "tabler-react";
+import AuthService from "../core/AuthService";
+
+const md5 = require('md5');
 
 type Props = {|
   +children: React.Node,
@@ -26,23 +28,18 @@ type navItem = {|
 |};
 
 const navBarItems: Array<navItem> = [
-  { value: "Dashboard", to: "/", icon: "home", LinkComponent: withRouter(NavLink) },
+  { value: "Dashboard", to: "/", icon: "home" },//, LinkComponent: withRouter(NavLink) < this is something to dow the selected page but not working
   {
-    value: "Details",
-    icon: "box",
+    value: "Details", icon: "box",
     subItems: [
-      {
-        value: "Project",
-        to: "/projects",
-        LinkComponent: withRouter(NavLink),
-      },
+      { value: "Project", to: "/projects" },
+      { value: "User", to: "/users" },
     ],
   },
-  
 ];
 
 
-const accountDropdownProps = {
+let accountDropdownProps = {
   avatarURL: "https://en.gravatar.com/userimage/37190760/17210d6aefc2c2865103c87afd046242.jpeg",
   name: "Jane Pearson",
   description: "Administrator",
@@ -53,18 +50,30 @@ const accountDropdownProps = {
     // { icon: "send", value: "Message" },
     // { isDivider: true },
     // { icon: "help-circle", value: "Need help?" },
-    { icon: "log-out", value: "Sign out" , to: "/login" },
+    { icon: "log-out", value: "Sign out" , to: "/login?logout=true" },
   ],
 };
 
 class SiteWrapper extends React.Component<Props, void> {
+  componentDidMount() {
+
+
+  }
+
   render(): React.Node {
+    let authService = new AuthService()
+    let token =  authService.currentToken();
+    accountDropdownProps.name = token.name;
+    accountDropdownProps.description = token.roles.join(',');
+    let avatarId = md5(token.email.toLowerCase());
+    accountDropdownProps.avatarURL = `https://en.gravatar.com/avatar/${avatarId}.jpeg?d=retro`;
+
     return (
       <Site.Wrapper
         headerProps={{
           href: "/",
           alt: "Core Cocker",
-          imageURL: "assets/hipster.svg",
+          imageURL: "/assets/hipster.svg",
           navItems: (
             <Nav.Item type="div" className="d-none d-md-flex">
               {/* <Button
@@ -85,7 +94,7 @@ class SiteWrapper extends React.Component<Props, void> {
         footerProps={{
           links: [
             <a href="/">dashboard</a>,
-            
+
           ],
           note: "",
           copyright: (
