@@ -8,3 +8,18 @@ script:
   - yarn
   - yarn flow
   - yarn run build
+
+after_success:
+  # Add docker images
+  - if [ "$TRAVIS_BRANCH"  =~ (feature.*) ]; then
+    docker build -t rolfwessels/coredocker-dashboard:feature .
+    fi
+  - if [ "$TRAVIS_BRANCH" == "develop" ]; then
+    docker build -t rolfwessels/coredocker-dashboard:develop .
+    docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    fi
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+    docker build -t rolfwessels/coredocker-dashboard:latest -t rolfwessels/coredocker-dashboard:v0.0.$TRAVIS_BUILD_NUMBER .
+    docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker push rolfwessels/coredocker-dashboard;
+    fi
