@@ -14,7 +14,7 @@ import gql from '../../../node_modules/graphql-tag';
 import { Formik } from "formik";
 import { User, UserCreateUpdate } from './UserTypes';
 
-const GET_PROJECT = gql`
+const GET_USER = gql`
   query getUser($id : String!){
     users {
       byId(id:$id){
@@ -28,7 +28,7 @@ const GET_PROJECT = gql`
   }
 `;
 
-const INSERT_PROJECT = gql`mutation insertUser($userName: String!,$userEmail: String!,$userRoles: [String!]) {
+const INSERT_USER = gql`mutation insertUser($userName: String!,$userEmail: String!,$userRoles: [String!]) {
   users {
     insert(
       user : {
@@ -42,7 +42,7 @@ const INSERT_PROJECT = gql`mutation insertUser($userName: String!,$userEmail: St
   }
 }`;
 
-const UPDATE_PROJECT = gql`mutation updateUser($id : String!, $userName: String!,$userEmail: String!,$userRoles: [String!]) {
+const UPDATE_USER = gql`mutation updateUser($id : String!, $userName: String!,$userEmail: String!,$userRoles: [String!]) {
   users {
     update(
       id:$id,
@@ -96,7 +96,7 @@ export default class UserUpdatePage extends React.Component<Props, State> {
 
   loadData(id: string) {
     this.setState({isLoading:true});
-    this.apiService.query(GET_PROJECT, { id: id })
+    this.apiService.query(GET_USER, { id: id })
       .then(response => this.setState({
         user: response.data.users.byId,
         error:   response.data.users.byId === null? `Failed could not load user with id '${id}'.` : '',
@@ -116,7 +116,7 @@ export default class UserUpdatePage extends React.Component<Props, State> {
   onSave(props: any, result: any) {
 
     this.setState({error:""})
-    this.apiService.mutate( this.isAdd() ? INSERT_PROJECT : UPDATE_PROJECT, {
+    this.apiService.mutate( this.isAdd() ? INSERT_USER : UPDATE_USER, {
       id: props.id ,
       userName : props.name,
       userEmail : props.email,
