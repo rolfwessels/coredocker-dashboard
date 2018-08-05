@@ -13,14 +13,14 @@ after_success:
   # Add docker images
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
   - if [[ "$TRAVIS_BRANCH"  =~ ^feature.*$ ]]; then
-    docker build -t rolfwessels/coredocker-dashboard:alpha .
+    docker build -t rolfwessels/coredocker-dashboard:alpha .;
     docker push rolfwessels/coredocker-dashboard;
     fi
   - if [ "$TRAVIS_BRANCH" == "develop" ]; then
-    docker build -t rolfwessels/coredocker-dashboard:beta .
+    docker build -t rolfwessels/coredocker-dashboard:beta .;
     docker push rolfwessels/coredocker-dashboard;
     fi
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker build -t rolfwessels/coredocker-dashboard:latest -t rolfwessels/coredocker-dashboard:v0.0.$TRAVIS_BUILD_NUMBER .
+    docker build -t rolfwessels/coredocker-dashboard:latest -t rolfwessels/coredocker-dashboard:v0.0.$TRAVIS_BUILD_NUMBER .;
     docker push rolfwessels/coredocker-dashboard;
     fi
