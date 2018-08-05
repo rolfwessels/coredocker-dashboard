@@ -25,6 +25,22 @@ docker-compose up -d;
 docker-compose exec www sh
 ```
 
+# Deploy to S3
+
+
+```
+
+yarn build
+bash
+export  API_URL=https://y6iqsmiv4h.execute-api.eu-west-1.amazonaws.com/Prod
+sed -i "s@REPLACE_API_URL@$API_URL@g" ./build/static/js/main.*.js
+exit
+# upload build folder to bucket
+view http://coredocker-www.s3-website-eu-west-1.amazonaws.com/
+
+
+```
+
 ## References
   * https://mherman.org/blog/2017/12/07/dockerizing-a-react-app/
   * https://tabler.github.io/tabler-react/
