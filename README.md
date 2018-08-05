@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/rolfwessels/coredocker-dashboard.svg?branch=master)](https://travis-ci.org/rolfwessels/coredocker-dashboard)
+[![Dockerhub Status](https://img.shields.io/badge/dockerhub-ok-blue.svg)](https://hub.docker.com/r/rolfwessels/coredocker-dashboard/)
 
 
 # For developers
