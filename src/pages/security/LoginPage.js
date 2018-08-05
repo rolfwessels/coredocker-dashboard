@@ -7,6 +7,7 @@ import AuthService from "../../core/AuthService";
 import { LoginPage as TablerLoginPage } from "tabler-react";
 import { Text } from "tabler-react";
 import QueryString from "query-string";
+import DeviceStorage from 'react-device-storage';
 
 type Props = {
   location: Location
@@ -17,6 +18,12 @@ type LoginData = {
   password: string,
 };
 
+const storage = new DeviceStorage({
+  cookieFallback: true,
+  cookie: {
+    secure: true
+  }
+}).localStorage();
 
 class LoginPage extends React.Component<Props> {
 
@@ -32,6 +39,7 @@ class LoginPage extends React.Component<Props> {
     this.authService.login(values.email, values.password).then((t) => {
       console.log('login done');
       setSubmitting(false);
+      storage.save('lastLoginEmail',values.email);
       window.location = '/';
     }, (e) => {
       console.error("error logging  in", e);
@@ -55,8 +63,8 @@ class LoginPage extends React.Component<Props> {
     return (
       <Formik
         initialValues={{
-          email: "guest@guest.com",
-          password: "guest!",
+          email: storage.read('lastLoginEmail'),
+          password: "",
         }}
         validate={values => {
           // same as above, but feel free to move this into a class method now.
