@@ -73,7 +73,7 @@ class SiteWrapper extends React.Component<Props, void> {
         headerProps={{
           href: "/",
           alt: "Core Cocker",
-          imageURL: "/assets/hipster.svg",
+          imageURL: "/assets/coredocker2.svg",
           navItems: (
             <Nav.Item type="div" className="d-none d-md-flex">
               {/* <Button
