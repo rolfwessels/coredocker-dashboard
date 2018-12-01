@@ -1,3 +1,3 @@
 export type WithId = {
-  id : string
+  id: string
 };

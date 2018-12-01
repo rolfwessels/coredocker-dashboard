@@ -1,14 +1,8 @@
 // @flow
 
 import * as React from 'react';
-import SiteWrapper from "../../components/SiteWrapper";
-import {
-  Page,
-  Button,
-  Dimmer,
-  Alert,
-  Header,
-} from "tabler-react";
+import SiteWrapper from '../../components/SiteWrapper';
+import { Page, Button, Dimmer, Alert, Header } from 'tabler-react';
 import UsersList from './UsersList';
 import gql from '../../../node_modules/graphql-tag';
 import ApiService from '../../core/ApiService';
@@ -18,36 +12,52 @@ type Props = {||};
 
 type State = {
   users: User[],
-  isLoading: bool,
-  error: string,
+  isLoading: boolean,
+  error: string
 };
 
-const GET_PROJECTS = gql`
+const GET_USERS = gql`
   {
     users {
       list {
-        id,
-        name,
-        email,
-        roles,
+        id
+        name
+        email
+        roles
         updateDate
       }
     }
   }
 `;
 
-const DELETE_PROJECT = gql`mutation usersDelete($userId: String!) {
-  users {
-    delete(id: $userId)
+const DELETE_USERS = gql`
+  mutation usersDelete($userId: String!) {
+    users {
+      remove(id: $userId) {
+        id
+      }
+    }
   }
-}`;
+`;
+
+const SUBSCRIPTION_USERS = gql`
+  subscription {
+    generalEvents {
+      correlationId
+      event
+      id
+    }
+  }
+`;
 
 class UsersPage extends React.Component<Props, State> {
-  apiService: ApiService
+  apiService: ApiService;
+  subscription: any;
   state = {
     users: [],
     isLoading: true,
-    error: '',
+    isSilentLoading: false,
+    error: ''
   };
 
   constructor() {
@@ -57,19 +67,38 @@ class UsersPage extends React.Component<Props, State> {
 
   componentDidMount() {
     this.refreshData();
+    this.subscription = this.subscribeToDataChanges();
+  }
+  componentWillUnmount() {
+    this.subscription.unsubscribe();
   }
 
   refreshData() {
-    this.apiService.query(GET_PROJECTS)
-      .then(response => this.setState({
-        users: response.data.users.list,
-        isLoading: false,
-        error: ""
-      }))
-      .catch(response => this.setState({
-        isLoading: false,
-        error: "Failed to read users from service."
-      }));
+    if (this.state.isSilentLoading) {
+      console.warn('Skip refresh user data because it is already loading.');
+      return;
+    }
+    this.setState({
+      isSilentLoading: true
+    });
+
+    this.apiService
+      .query(GET_USERS)
+      .then(response =>
+        this.setState({
+          users: response.data.users.list,
+          isLoading: false,
+          isSilentLoading: false,
+          error: ''
+        })
+      )
+      .catch(response =>
+        this.setState({
+          isLoading: false,
+          isSilentLoading: false,
+          error: 'Failed to read users from service.'
+        })
+      );
   }
 
   add() {
@@ -81,14 +110,44 @@ class UsersPage extends React.Component<Props, State> {
   }
 
   remove(user: User, callback: any) {
-    this.apiService.mutate(DELETE_PROJECT, { userId: user.id })
+    this.apiService
+      .mutate(DELETE_USERS, { userId: user.id })
       .then(response => {
-        this.refreshData();
         callback();
+        this.removeIdFromList(user.id);
       })
-      .catch(response => this.setState({
-        error: `Failed to remove user '${user.name}' from service.`
-      }));
+      .catch(response =>
+        this.setState({
+          error: `Failed to remove user '${user.name}' from service.`
+        })
+      );
+  }
+
+  removeIdFromList(id) {
+    var copy = [...this.state.users];
+    var index = copy.findIndex(user => user.id === id);
+    if (index >= 0) {
+      copy.splice(index, 1);
+      this.setState({
+        users: copy
+      });
+    }
+  }
+
+  subscribeToDataChanges() {
+    return this.apiService.subscribe(SUBSCRIPTION_USERS).subscribe(response => {
+      if (response.errors) {
+      } else {
+        var { event, id } = response.data.generalEvents;
+        if (event === 'UserCreated' || event === 'UserUpdated') {
+          this.refreshData();
+        } else if (event === 'UserRemoved') {
+          this.removeIdFromList(id);
+        } else {
+          console.log('Ignore event:' + event);
+        }
+      }
+    });
   }
 
   render() {
@@ -96,12 +155,17 @@ class UsersPage extends React.Component<Props, State> {
     return (
       <SiteWrapper>
         <Page.Content>
-          <Header.H1>Users<span style={{ 'marginLeft': '15px' }}> <Button onClick={() => this.add()} color="secondary" icon="plus" /></span></Header.H1>
-          {
-            this.state.isLoading
-              ? <Dimmer active loader></Dimmer>
-              : <UsersList users={users} update={(m, c) => this.update(m)} remove={(m, c) => this.remove(m, c)} />
-          }
+          <Header.H1>
+            Users
+            <span style={{ marginLeft: '15px' }}>
+              <Button onClick={() => this.add()} color="secondary" icon="plus" />
+            </span>
+          </Header.H1>
+          {this.state.isLoading ? (
+            <Dimmer active loader />
+          ) : (
+            <UsersList users={users} update={(m, c) => this.update(m)} remove={(m, c) => this.remove(m, c)} />
+          )}
           {this.state.error && <Alert type="danger">{this.state.error}</Alert>}
         </Page.Content>
       </SiteWrapper>

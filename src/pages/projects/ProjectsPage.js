@@ -1,14 +1,8 @@
 // @flow
 
 import * as React from 'react';
-import SiteWrapper from "../../components/SiteWrapper";
-import {
-  Page,
-  Button,
-  Dimmer,
-  Alert,
-  Header,
-} from "tabler-react";
+import SiteWrapper from '../../components/SiteWrapper';
+import { Page, Button, Dimmer, Alert, Header } from 'tabler-react';
 import ProjectsList from './ProjectsList';
 import gql from '../../../node_modules/graphql-tag';
 import ApiService from '../../core/ApiService';
@@ -18,39 +12,58 @@ type Props = {||};
 
 type State = {
   projects: Project[],
-  isLoading: bool,
-  error: string,
+  isLoading: boolean,
+  error: string
 };
 
 const GET_PROJECTS = gql`
   {
     projects {
       list {
-        id,
-        name,
+        id
+        name
         updateDate
       }
     }
   }
 `;
 
-const DELETE_PROJECT = gql`mutation projectsDelete($projectId: String!) {
-  projects {
-    delete(id: $projectId)
+const DELETE_PROJECT = gql`
+  mutation projectsDelete($projectId: String!) {
+    projects {
+      remove(id: $projectId) {
+        id
+      }
+    }
   }
-}`;
+`;
+
+const SUBSCRIPTION_PROJECT = gql`
+  subscription {
+    generalEvents {
+      correlationId
+      event
+      id
+    }
+  }
+`;
 
 class ProjectsPage extends React.Component<Props, State> {
-  apiService: ApiService
+  apiService: ApiService;
   state = {
     projects: [],
     isLoading: true,
-    error: '',
+    isSilentLoading: false,
+    error: ''
   };
 
   constructor() {
     super();
     this.apiService = new ApiService();
+    this.subscription = this.subscribeToDataChanges();
+  }
+  componentWillUnmount() {
+    this.subscription.unsubscribe();
   }
 
   componentDidMount() {
@@ -58,16 +71,30 @@ class ProjectsPage extends React.Component<Props, State> {
   }
 
   refreshData() {
-    this.apiService.query(GET_PROJECTS)
-      .then(response => this.setState({
-        projects: response.data.projects.list,
-        isLoading: false,
-        error: ""
-      }))
-      .catch(response => this.setState({
-        isLoading: false,
-        error: "Failed to read projects from service."
-      }));
+    if (this.state.isSilentLoading) {
+      console.warn('Skip refresh user data because it is already loading.');
+      return;
+    }
+    this.setState({
+      isSilentLoading: true
+    });
+    this.apiService
+      .query(GET_PROJECTS)
+      .then(response =>
+        this.setState({
+          projects: response.data.projects.list,
+          isLoading: false,
+          isSilentLoading: false,
+          error: ''
+        })
+      )
+      .catch(response =>
+        this.setState({
+          isLoading: false,
+          isSilentLoading: false,
+          error: 'Failed to read projects from service.'
+        })
+      );
   }
 
   add() {
@@ -79,14 +106,42 @@ class ProjectsPage extends React.Component<Props, State> {
   }
 
   remove(project: Project, callback: any) {
-    this.apiService.mutate(DELETE_PROJECT, { projectId: project.id })
+    this.apiService
+      .mutate(DELETE_PROJECT, { projectId: project.id })
       .then(response => {
-        this.refreshData();
         callback();
+        this.removeIdFromList(project.id);
       })
-      .catch(response => this.setState({
-        error: `Failed to remove project '${project.name}' from service.`
-      }));
+      .catch(response =>
+        this.setState({
+          error: `Failed to remove project '${project.name}' from service.`
+        })
+      );
+  }
+
+  removeIdFromList(id) {
+    var copy = [...this.state.projects];
+    var index = copy.findIndex(project => project.id === id);
+    if (index >= 0) {
+      copy.splice(index, 1);
+      this.setState({
+        projects: copy
+      });
+    }
+  }
+
+  subscribeToDataChanges() {
+    return this.apiService.subscribe(SUBSCRIPTION_PROJECT).subscribe(response => {
+      if (response.errors) {
+      } else {
+        var { event, id } = response.data.generalEvents;
+        if (event === 'ProjectCreated' || event === 'ProjectUpdated') {
+          this.refreshData();
+        } else if (event === 'ProjectRemoved') {
+          this.removeIdFromList(id);
+        }
+      }
+    });
   }
 
   render() {
@@ -94,12 +149,18 @@ class ProjectsPage extends React.Component<Props, State> {
     return (
       <SiteWrapper>
         <Page.Content>
-          <Header.H1>Projects<span style={{ 'marginLeft': '15px' }}> <Button onClick={() => this.add()} color="secondary" icon="plus" /></span></Header.H1>
-          {
-            this.state.isLoading
-              ? <Dimmer active loader></Dimmer>
-              : <ProjectsList projects={projects} update={(m, c) => this.update(m)} remove={(m, c) => this.remove(m, c)} />
-          }
+          <Header.H1>
+            Projects
+            <span style={{ marginLeft: '15px' }}>
+              {' '}
+              <Button onClick={() => this.add()} color="secondary" icon="plus" />
+            </span>
+          </Header.H1>
+          {this.state.isLoading ? (
+            <Dimmer active loader />
+          ) : (
+            <ProjectsList projects={projects} update={(m, c) => this.update(m)} remove={(m, c) => this.remove(m, c)} />
+          )}
           {this.state.error && <Alert type="danger">{this.state.error}</Alert>}
         </Page.Content>
       </SiteWrapper>

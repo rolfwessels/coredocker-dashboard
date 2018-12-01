@@ -1,8 +1,8 @@
 // @flow
 
-import * as React from "react";
+import * as React from 'react';
 
-import { Error404Page } from "tabler-react";
+import { Error404Page } from 'tabler-react';
 
 type Props = {||};
 

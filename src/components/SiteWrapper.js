@@ -1,21 +1,21 @@
 // @flow
 
-import * as React from "react";
+import * as React from 'react';
 
-import { Site, Nav, Grid, List, Button } from "tabler-react";
-import AuthService from "../core/AuthService";
+import { Site, Nav, Grid, List, Button } from 'tabler-react';
+import AuthService from '../core/AuthService';
 
 const md5 = require('md5');
 
 type Props = {|
-  +children: React.Node,
+  +children: React.Node
 |};
 
 type subNavItem = {|
   +value: string,
   +to?: string,
   +icon?: string,
-  +LinkComponent?: React.ElementType,
+  +LinkComponent?: React.ElementType
 |};
 
 type navItem = {|
@@ -24,25 +24,22 @@ type navItem = {|
   +icon?: string,
   +active?: boolean,
   +LinkComponent?: React.ElementType,
-  +subItems?: Array<subNavItem>,
+  +subItems?: Array<subNavItem>
 |};
 
 const navBarItems: Array<navItem> = [
-  { value: "Dashboard", to: "/", icon: "home" },//, LinkComponent: withRouter(NavLink) < this is something to dow the selected page but not working
+  { value: 'Dashboard', to: '/', icon: 'home' }, //, LinkComponent: withRouter(NavLink) < this is something to dow the selected page but not working
   {
-    value: "Details", icon: "box",
-    subItems: [
-      { value: "Project", to: "/projects" },
-      { value: "User", to: "/users" },
-    ],
-  },
+    value: 'Details',
+    icon: 'box',
+    subItems: [{ value: 'Project', to: '/projects' }, { value: 'User', to: '/users' }]
+  }
 ];
 
-
 let accountDropdownProps = {
-  avatarURL: "https://en.gravatar.com/userimage/37190760/17210d6aefc2c2865103c87afd046242.jpeg",
-  name: "Jane Pearson",
-  description: "Administrator",
+  avatarURL: 'https://en.gravatar.com/userimage/37190760/17210d6aefc2c2865103c87afd046242.jpeg',
+  name: 'Jane Pearson',
+  description: 'Administrator',
   options: [
     // { icon: "user", value: "Profile" },
     // { icon: "settings", value: "Settings" },
@@ -50,19 +47,16 @@ let accountDropdownProps = {
     // { icon: "send", value: "Message" },
     // { isDivider: true },
     // { icon: "help-circle", value: "Need help?" },
-    { icon: "log-out", value: "Sign out" , to: "/login?logout=true" },
-  ],
+    { icon: 'log-out', value: 'Sign out', to: '/login?logout=true' }
+  ]
 };
 
 class SiteWrapper extends React.Component<Props, void> {
-  componentDidMount() {
-
-
-  }
+  componentDidMount() {}
 
   render(): React.Node {
-    let authService = new AuthService()
-    let token =  authService.currentToken();
+    let authService = new AuthService();
+    let token = authService.currentToken();
     accountDropdownProps.name = token.name;
     accountDropdownProps.description = token.roles.join(',');
     let avatarId = md5(token.email.toLowerCase());
@@ -71,9 +65,9 @@ class SiteWrapper extends React.Component<Props, void> {
     return (
       <Site.Wrapper
         headerProps={{
-          href: "/",
-          alt: "Core Cocker",
-          imageURL: "/assets/coredocker2.svg",
+          href: '/',
+          alt: 'Core Cocker',
+          imageURL: '/assets/coredocker2.svg',
           navItems: (
             <Nav.Item type="div" className="d-none d-md-flex">
               {/* <Button
@@ -88,27 +82,20 @@ class SiteWrapper extends React.Component<Props, void> {
               </Button> */}
             </Nav.Item>
           ),
-          accountDropdown: accountDropdownProps,
+          accountDropdown: accountDropdownProps
         }}
         navProps={{ itemsObjects: navBarItems }}
         footerProps={{
-          links: [
-            <a href="/">dashboard</a>,
-
-          ],
-          note: "",
+          links: [<a href="/">dashboard</a>],
+          note: '',
           copyright: (
             <React.Fragment>
               Copyright © 2018
               <a href="."> Tabler-react</a>. Theme by
-              <a
-                href="https://codecalm.net"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {" "}
+              <a href="https://codecalm.net" target="_blank" rel="noopener noreferrer">
+                {' '}
                 codecalm.net
-              </a>{" "}
+              </a>{' '}
               All rights reserved.
             </React.Fragment>
           ),
@@ -122,18 +109,12 @@ class SiteWrapper extends React.Component<Props, void> {
                 </List>
               </Grid.Col>
               <Grid.Col auto={true}>
-                <Button
-                  href="https://github.com/rolfwessels"
-                  size="sm"
-                  outline
-                  color="primary"
-                  RootComponent="a"
-                >
+                <Button href="https://github.com/rolfwessels" size="sm" outline color="primary" RootComponent="a">
                   Source code
                 </Button>
               </Grid.Col>
             </React.Fragment>
-          ),
+          )
         }}
       >
         {this.props.children}
