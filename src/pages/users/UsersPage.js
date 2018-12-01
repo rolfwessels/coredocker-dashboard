@@ -13,6 +13,7 @@ type Props = {||};
 type State = {
   users: User[],
   isLoading: boolean,
+  isSilentLoading: boolean,
   error: string
 };
 
@@ -59,6 +60,8 @@ class UsersPage extends React.Component<Props, State> {
     isSilentLoading: false,
     error: ''
   };
+  subscription: Observable<any>;
+  timeout: TimeoutID;
 
   constructor() {
     super();

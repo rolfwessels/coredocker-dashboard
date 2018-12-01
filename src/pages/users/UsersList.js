@@ -13,13 +13,16 @@ type Props = {
   remove(user: User, callback: any): void
 };
 
-export default class UsersList extends React.Component<Props> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      defaultFilter: ''
-    };
-  }
+type State = {
+  defaultFilter: string
+};
+
+export default class UsersList extends React.Component<Props, State> {
+  timeout: TimeoutID;
+  state = {
+    defaultFilter: ''
+  };
+
   setFilter(searchString: string) {
     if (this.timeout != null) clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
@@ -28,7 +31,7 @@ export default class UsersList extends React.Component<Props> {
     }, 500);
   }
 
-  applyFilter(item) {
+  applyFilter(item: User) {
     const filter = this.state.defaultFilter.toLowerCase();
     return (
       item.name.toLowerCase().indexOf(filter) >= 0 ||

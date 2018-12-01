@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Page, Grid, Dimmer, StampCard, Alert } from 'tabler-react';
 import gql from '../../../node_modules/graphql-tag';
+import { Observable } from 'apollo-link';
 import SiteWrapper from '../../components/SiteWrapper';
 import ApiService from '../../core/ApiService';
 import AuthService from '../../core/AuthService';
@@ -43,6 +44,8 @@ class DashboardPage extends React.Component<Props, State> {
     error: ''
   };
   token: Token;
+  subscription: Observable<any>;
+  timeout: TimeoutID;
 
   constructor() {
     super();

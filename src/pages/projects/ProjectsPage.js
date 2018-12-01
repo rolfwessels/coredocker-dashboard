@@ -7,12 +7,14 @@ import ProjectsList from './ProjectsList';
 import gql from '../../../node_modules/graphql-tag';
 import ApiService from '../../core/ApiService';
 import { Project } from './ProjectTypes';
+import { Observable } from 'apollo-link';
 
 type Props = {||};
 
 type State = {
   projects: Project[],
   isLoading: boolean,
+  isSilentLoading: boolean,
   error: string
 };
 
@@ -56,6 +58,8 @@ class ProjectsPage extends React.Component<Props, State> {
     isSilentLoading: false,
     error: ''
   };
+  subscription: Observable<any>;
+  timeout: TimeoutID;
 
   constructor() {
     super();
@@ -119,7 +123,7 @@ class ProjectsPage extends React.Component<Props, State> {
       );
   }
 
-  removeIdFromList(id) {
+  removeIdFromList(id: string) {
     var copy = [...this.state.projects];
     var index = copy.findIndex(project => project.id === id);
     if (index >= 0) {
