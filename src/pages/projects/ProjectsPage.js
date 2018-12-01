@@ -67,7 +67,6 @@ class ProjectsPage extends React.Component<Props, State> {
   constructor() {
     super();
     this.apiService = new ApiService();
-    this.changeSubscription = this.subscribeToDataChanges();
   }
   componentWillUnmount() {
     this.changeSubscription.unsubscribe();
@@ -75,6 +74,7 @@ class ProjectsPage extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    this.changeSubscription = this.subscribeToDataChanges();
     this.refreshData();
   }
 

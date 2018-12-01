@@ -76,7 +76,8 @@ class UsersPage extends React.Component<Props, State> {
     this.refreshData();
   }
   componentWillUnmount() {
-    this.subscription.unsubscribe();
+    this.changeSubscription.unsubscribe();
+    this.querySubscription.unsubscribe();
   }
 
   refreshData() {
