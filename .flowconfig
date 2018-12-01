@@ -1,6 +1,7 @@
 [ignore]
 .*/node_modules/findup/.*
 .*/node_modules/eslint-plugin-jsx-a11y/.*
+.*/node_modules/graphql/utilities/buildASTSchema.js.flow
 
 [include]
 ./src/
