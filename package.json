@@ -8,7 +8,7 @@
     "apollo-link-ws": "^1.0.10",
     "flow-bin": "^0.87.0",
     "formik": "^1.0.1",
-    "graphql": "^0.13.2",
+    "graphql": "^14.0.2",
     "md5": "^2.2.1",
     "query-string": "^6.2.0",
     "react": "^16.4.1",
