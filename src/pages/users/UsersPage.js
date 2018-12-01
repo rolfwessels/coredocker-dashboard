@@ -9,7 +9,9 @@ import ApiService from '../../core/ApiService';
 import { User } from './UserTypes';
 import { Observable } from 'apollo-link';
 
-type Props = {||};
+type Props = {
+  history: any
+};
 
 type State = {
   users: User[],
@@ -54,7 +56,6 @@ const SUBSCRIPTION_USERS = gql`
 
 class UsersPage extends React.Component<Props, State> {
   apiService: ApiService;
-  subscription: any;
   state = {
     users: [],
     isLoading: true,
@@ -106,11 +107,11 @@ class UsersPage extends React.Component<Props, State> {
   }
 
   add() {
-    window.location = '/user/add';
+    this.props.history.push('/user/add');
   }
 
   update(user: User) {
-    window.location = `/user/${user.id}`;
+    this.props.history.push(`/user/${user.id}`);
   }
 
   remove(user: User, callback: any) {

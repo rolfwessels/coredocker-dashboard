@@ -9,7 +9,9 @@ import ApiService from '../../core/ApiService';
 import { Project } from './ProjectTypes';
 import { Observable } from 'apollo-link';
 
-type Props = {||};
+type Props = {
+  history: any
+};
 
 type State = {
   projects: Project[],
@@ -102,11 +104,11 @@ class ProjectsPage extends React.Component<Props, State> {
   }
 
   add() {
-    window.location = '/project/add';
+    this.props.history.push('/project/add');
   }
 
   update(project: Project) {
-    window.location = `/project/${project.id}`;
+    this.props.history.push(`/project/${project.id}`);
   }
 
   remove(project: Project, callback: any) {

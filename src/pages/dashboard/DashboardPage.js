@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Page, Grid, Dimmer, StampCard, Alert } from 'tabler-react';
+import { Route } from 'react-router-dom';
 import gql from '../../../node_modules/graphql-tag';
 import { Observable } from 'apollo-link';
 import SiteWrapper from '../../components/SiteWrapper';
@@ -105,42 +106,58 @@ class DashboardPage extends React.Component<Props, State> {
   render() {
     return (
       <SiteWrapper>
-        <Page.Content title="Dashboard">
-          {this.state.isLoading ? (
-            <Dimmer active loader />
-          ) : (
-            <Grid.Row cards={true}>
-              {this.token.hasAccess('ReadProject') && (
-                <Grid.Col sm={6} lg={3}>
-                  <StampCard
-                    color="blue"
-                    icon="server"
-                    header={
-                      <a href="/projects">
-                        {this.state.projectsCount} <small>Projects</small>
-                      </a>
-                    }
-                  />
-                </Grid.Col>
+        <Route
+          render={({ history }) => (
+            <Page.Content title="Dashboard">
+              {this.state.isLoading ? (
+                <Dimmer active loader />
+              ) : (
+                <Grid.Row cards={true}>
+                  {this.token.hasAccess('ReadProject') && (
+                    <Grid.Col sm={6} lg={3}>
+                      <StampCard
+                        color="blue"
+                        icon="server"
+                        header={
+                          <a
+                            href="/projects"
+                            onClick={e => {
+                              e.preventDefault();
+                              history.push(`/projects/`);
+                            }}
+                          >
+                            {this.state.projectsCount} <small>Projects</small>
+                          </a>
+                        }
+                      />
+                    </Grid.Col>
+                  )}
+                  {this.token.hasAccess('ReadUsers') && (
+                    <Grid.Col sm={6} lg={3}>
+                      <StampCard
+                        color="green"
+                        icon="user"
+                        header={
+                          <a
+                            href="/users"
+                            onClick={e => {
+                              e.preventDefault();
+                              history.push(`/users/`);
+                            }}
+                          >
+                            {this.state.usersCount} <small>Users</small>
+                          </a>
+                        }
+                      />
+                    </Grid.Col>
+                  )}
+                  {/* More */}
+                </Grid.Row>
               )}
-              {this.token.hasAccess('ReadUsers') && (
-                <Grid.Col sm={6} lg={3}>
-                  <StampCard
-                    color="green"
-                    icon="user"
-                    header={
-                      <a href="/users">
-                        {this.state.usersCount} <small>Users</small>
-                      </a>
-                    }
-                  />
-                </Grid.Col>
-              )}
-              {/* More */}
-            </Grid.Row>
+              {this.state.error && <Alert type="danger">{this.state.error}</Alert>}
+            </Page.Content>
           )}
-          {this.state.error && <Alert type="danger">{this.state.error}</Alert>}
-        </Page.Content>
+        />
       </SiteWrapper>
     );
   }

@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { Site, Nav, Grid, List, Button } from 'tabler-react';
 import AuthService from '../core/AuthService';
+import { NavLink, withRouter } from 'react-router-dom';
 
 const md5 = require('md5');
 
@@ -28,11 +29,14 @@ type navItem = {|
 |};
 
 const navBarItems: Array<navItem> = [
-  { value: 'Dashboard', to: '/', icon: 'home' }, //, LinkComponent: withRouter(NavLink) < this is something to dow the selected page but not working
+  { value: 'Dashboard', to: '/', icon: 'home', LinkComponent: withRouter(NavLink) }, //, LinkComponent: withRouter(NavLink) < this is something to dow the selected page but not working
   {
     value: 'Details',
     icon: 'box',
-    subItems: [{ value: 'Project', to: '/projects' }, { value: 'User', to: '/users' }]
+    subItems: [
+      { value: 'Project', to: '/projects', LinkComponent: withRouter(NavLink) },
+      { value: 'User', to: '/users', LinkComponent: withRouter(NavLink) }
+    ]
   }
 ];
 
