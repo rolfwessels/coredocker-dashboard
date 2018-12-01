@@ -51,8 +51,8 @@ const authLink = setContext((_, { headers }) => {
 
 const defaultOptions = {
   watchQuery: {
-    fetchPolicy: 'network-only',
-    errorPolicy: 'ignore'
+    fetchPolicy: 'cache-and-network'
+    // errorPolicy: 'ignore'
   },
   query: {
     fetchPolicy: 'network-only',
@@ -94,7 +94,9 @@ const buildLink = () => {
 
 const _graphql: ApolloClient = new ApolloClient({
   link: buildLink(),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    dataIdFromObject: object => object.id
+  }),
   defaultOptions: defaultOptions
 });
 
@@ -107,6 +109,13 @@ class ApiService {
 
   query(query: any, variables: any) {
     return this.graphql.query({
+      query: query,
+      variables: variables
+    });
+  }
+
+  queryWatch(query: any, variables: any) {
+    return this.graphql.watchQuery({
       query: query,
       variables: variables
     });

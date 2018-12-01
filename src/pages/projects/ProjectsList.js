@@ -26,7 +26,6 @@ export default class ProjectsList extends React.Component<Props, State> {
   setFilter(searchString: string) {
     if (this.timeout != null) clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
-      console.log(searchString);
       this.setState({ defaultFilter: searchString });
     }, 500);
   }
@@ -38,7 +37,6 @@ export default class ProjectsList extends React.Component<Props, State> {
 
   render() {
     const { projects } = this.props;
-
     return (
       <Grid.Row cards deck>
         <Grid.Col width={12}>

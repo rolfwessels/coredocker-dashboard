@@ -27,7 +27,6 @@ export default class UsersList extends React.Component<Props, State> {
   setFilter(searchString: string) {
     if (this.timeout != null) clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
-      console.log(searchString);
       this.setState({ defaultFilter: searchString });
     }, 500);
   }

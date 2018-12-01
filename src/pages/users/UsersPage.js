@@ -62,7 +62,8 @@ class UsersPage extends React.Component<Props, State> {
     isSilentLoading: false,
     error: ''
   };
-  subscription: Observable<any>;
+  changeSubscription: Observable<any>;
+  querySubscription: Observable<any>;
   timeout: TimeoutID;
 
   constructor() {
@@ -71,8 +72,8 @@ class UsersPage extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    this.changeSubscription = this.subscribeToDataChanges();
     this.refreshData();
-    this.subscription = this.subscribeToDataChanges();
   }
   componentWillUnmount() {
     this.subscription.unsubscribe();
@@ -86,24 +87,28 @@ class UsersPage extends React.Component<Props, State> {
     this.setState({
       isSilentLoading: true
     });
-
-    this.apiService
-      .query(GET_USERS)
-      .then(response =>
-        this.setState({
-          users: response.data.users.list,
-          isLoading: false,
-          isSilentLoading: false,
-          error: ''
-        })
-      )
-      .catch(response =>
+    if (this.querySubscription) {
+      this.querySubscription.unsubscribe();
+      this.querySubscription = null;
+    }
+    this.querySubscription = this.apiService.queryWatch(GET_USERS).subscribe(response => {
+      if (response.errors) {
         this.setState({
           isLoading: false,
           isSilentLoading: false,
-          error: 'Failed to read users from service.'
-        })
-      );
+          error: 'Failed to read projects from service.'
+        });
+      } else {
+        if (response.data) {
+          this.setState({
+            users: response.data.users.list,
+            isLoading: false,
+            isSilentLoading: false,
+            error: ''
+          });
+        }
+      }
+    });
   }
 
   add() {
