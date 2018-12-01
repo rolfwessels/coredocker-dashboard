@@ -24,11 +24,11 @@ type State = {
 };
 
 const GET_COUNTS_USER = `
-    users { query { count } }
+    users { paged { count } }
 `;
 
 const GET_COUNTS_PROJECTS = `
-    projects { query { count } }
+    projects { paged { count } }
 `;
 
 
@@ -67,8 +67,8 @@ class DashboardPage extends React.Component<Props, State> {
 
     this.apiService.query(GET_COUNTS)
       .then(response => this.setState({
-        projectsCount: response.data.projects ? response.data.projects.query.count : 0,
-        usersCount: response.data.users ? response.data.users.query.count : 0,
+        projectsCount: response.data.projects ? response.data.projects.paged.count : 0,
+        usersCount: response.data.users ? response.data.users.paged.count : 0,
         isLoading: false,
         error: ""
       }))

@@ -25,7 +25,7 @@ type State = {
 const GET_PROJECTS = gql`
   {
     users {
-      all {
+      list {
         id,
         name,
         email,
@@ -62,7 +62,7 @@ class UsersPage extends React.Component<Props, State> {
   refreshData() {
     this.apiService.query(GET_PROJECTS)
       .then(response => this.setState({
-        users: response.data.users.all,
+        users: response.data.users.list,
         isLoading: false,
         error: ""
       }))

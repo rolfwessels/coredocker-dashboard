@@ -65,9 +65,8 @@ export default class UsersList extends React.Component<Props> {
                     </Table.Col>
                     <Table.Col>
                       {
-                        user.roles.map(role=> (<span> <span className={"status-icon "+( role ==="Admin"? "bg-success" : "bg-warning")} /> {role}</span>) )
+                        user.roles.map(role=> (<span key={user.id+"_"+role}> <span className={"status-icon "+( role ==="Admin"? "bg-success" : "bg-warning")} /> {role}</span>) )
                       }
-
                     </Table.Col>
                     <Table.Col>
                       <TimeAgo date={user.updateDate} />

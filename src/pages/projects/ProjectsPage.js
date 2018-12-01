@@ -25,7 +25,7 @@ type State = {
 const GET_PROJECTS = gql`
   {
     projects {
-      all {
+      list {
         id,
         name,
         updateDate
@@ -60,7 +60,7 @@ class ProjectsPage extends React.Component<Props, State> {
   refreshData() {
     this.apiService.query(GET_PROJECTS)
       .then(response => this.setState({
-        projects: response.data.projects.all,
+        projects: response.data.projects.list,
         isLoading: false,
         error: ""
       }))
@@ -157,11 +157,11 @@ export default ProjectsPage;
     },
     {
       "FileName": "DashboardPage.js",
-      "Indexline": "projects { query { count } }",
+      "Indexline": "projects { paged { count } }",
       "InsertAbove": false,
       "InsertInline": false,
       "Lines": [
-        "projects { query { count } }"
+        "projects { paged { count } }"
       ]
     },
     {
@@ -184,11 +184,11 @@ export default ProjectsPage;
     },
     {
       "FileName": "DashboardPage.js",
-      "Indexline": "projectsCount: response.data.projects.query.count,",
+      "Indexline": "projectsCount: response.data.projects.paged.count,",
       "InsertAbove": false,
       "InsertInline": false,
       "Lines": [
-        "projectsCount: response.data.projects.query.count,"
+        "projectsCount: response.data.projects.paged.count,"
       ]
     },
     {
