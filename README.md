@@ -42,6 +42,8 @@ view http://coredocker-www.s3-website-eu-west-1.amazonaws.com/
 ```
 
 ## Todo
+ * Add some versioning.
+ * Env variables.
  * Add some global state.
  * Add some graph samples
  * Add more avatars :-)

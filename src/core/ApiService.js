@@ -75,10 +75,6 @@ const wsLink = () => {
 };
 
 const buildLink = () => {
-  if (AppSettings.ApiEndPoint().indexOf('https') === 0) {
-    console.log('Connect https only.');
-    return authLink.concat(httpLink);
-  }
   console.log('Connect to graphql subscriptions.');
   return split(
     // split based on operation type
