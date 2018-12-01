@@ -7,6 +7,7 @@ import UsersList from './UsersList';
 import gql from '../../../node_modules/graphql-tag';
 import ApiService from '../../core/ApiService';
 import { User } from './UserTypes';
+import { Observable } from 'apollo-link';
 
 type Props = {||};
 
@@ -126,7 +127,7 @@ class UsersPage extends React.Component<Props, State> {
       );
   }
 
-  removeIdFromList(id) {
+  removeIdFromList(id: string) {
     var copy = [...this.state.users];
     var index = copy.findIndex(user => user.id === id);
     if (index >= 0) {
