@@ -42,9 +42,9 @@ view http://coredocker-www.s3-website-eu-west-1.amazonaws.com/
 ```
 
 ## Todo
- * Stop the page reloading !
  * Add some global state.
  * Add some graph samples
+ * Add more avatars :-)
 
 
 

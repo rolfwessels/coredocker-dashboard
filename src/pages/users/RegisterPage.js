@@ -9,7 +9,8 @@ import gql from '../../../node_modules/graphql-tag';
 import ApiService from '../../core/ApiService';
 
 type Props = {
-  location: Location
+  location: Location,
+  history: any
 };
 
 type RegisterData = {
