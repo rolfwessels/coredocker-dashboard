@@ -41,6 +41,13 @@ view http://coredocker-www.s3-website-eu-west-1.amazonaws.com/
 
 ```
 
+## Todo
+ * Add some global state.
+ * Add some graph samples
+ * Add more avatars :-)
+
+
+
 ## References
   * https://mherman.org/blog/2017/12/07/dockerizing-a-react-app/
   * https://tabler.github.io/tabler-react/

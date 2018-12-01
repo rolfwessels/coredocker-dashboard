@@ -1,42 +1,33 @@
-
 // @flow
 
-import React, { Component } from 'react'
-import {
-  Icon,
-} from "tabler-react";
+import React, { Component } from 'react';
+import { Icon } from 'tabler-react';
 import { WithId } from './DefaultTypes';
 
-
-
 type Props = {
-  model : WithId;
-  update(project: WithId) : void;
-  remove(project: WithId, callback: any) : void;
+  model: WithId,
+  update(project: WithId): void,
+  remove(project: WithId, callback: any): void
 };
 
 type State = {
   markedForRemoval: any
 };
 
-
-
 export default class EditDelete extends Component<Props, State> {
   state = {
-    markedForRemoval: {},
+    markedForRemoval: {}
   };
 
-  markedForRemoval(model: any, isMarked: bool) {
-    var update = {}
+  markedForRemoval(model: any, isMarked: boolean) {
+    var update = {};
     update[model.id] = isMarked;
-    console.log('update', update);
     this.setState({ markedForRemoval: Object.assign(this.state.markedForRemoval, update) });
-    console.log('this.state', this.state.markedForRemoval);
   }
 
   render() {
     return (
-      <div className="editDelete" >
+      <div className="editDelete">
         {this.state.markedForRemoval[this.props.model.id] || (
           <span>
             <Icon prefix="fe" name="edit-2" onClick={() => this.props.update(this.props.model)} />
@@ -51,10 +42,16 @@ export default class EditDelete extends Component<Props, State> {
         {this.state.markedForRemoval[this.props.model.id] && (
           <span>
             <Icon prefix="fe" name="x" onClick={() => this.markedForRemoval(this.props.model, false)} />
-            <Icon prefix="fe" name="trash-2" onClick={() => { this.props.remove(this.props.model, () => this.markedForRemoval(this.props.model, false)); }} />
+            <Icon
+              prefix="fe"
+              name="trash-2"
+              onClick={() => {
+                this.props.remove(this.props.model, () => {});
+              }}
+            />
           </span>
         )}
       </div>
-    )
+    );
   }
 }
