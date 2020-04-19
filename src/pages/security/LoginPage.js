@@ -40,8 +40,7 @@ class LoginPage extends React.Component<Props> {
         console.log('login done');
         setSubmitting(false);
         storage.save('lastLoginEmail', values.email);
-
-        this.props.history.push('/');
+        document.location = '/';
       },
       e => {
         console.error('error logging  in', e);

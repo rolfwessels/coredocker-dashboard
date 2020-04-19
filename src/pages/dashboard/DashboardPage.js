@@ -20,16 +20,16 @@ type State = {
 };
 
 const GET_COUNTS_USER = `
-    users { paged { count } }
+    users { paged(includeCount:true) { count } }
 `;
 
 const GET_COUNTS_PROJECTS = `
-    projects { paged { count } }
+    projects { paged(includeCount:true) { count } }
 `;
 
 const SUBSCRIPTION_CHANGES = gql`
   subscription {
-    generalEvents {
+    onDefaultEvent {
       event
       id
     }
@@ -92,7 +92,8 @@ class DashboardPage extends React.Component<Props, State> {
     return this.apiService.subscribe(SUBSCRIPTION_CHANGES).subscribe(response => {
       if (response.errors) {
       } else {
-        var { event } = response.data.generalEvents;
+        console.log(response.data);
+        var { event } = response.data.onDefaultEvent;
         if (event.indexOf('Create') >= 0 || event.indexOf('Removed') >= 0) {
           if (this.timeout != null) clearTimeout(this.timeout);
           this.timeout = setTimeout(() => {
