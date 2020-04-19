@@ -22,7 +22,7 @@
     "tabler-react": "^1.15.0",
     "mem": "^4.0.0",
     "acorn": "^5.7.4",
-    "minimist": "^0.2.1",
+    "minimist": "^1.2.3",
     "kind-of": "^6.0.3",
     "handlebars": "^4.3.0",
     "lodash": "^4.17.12",
