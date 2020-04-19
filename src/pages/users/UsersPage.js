@@ -23,12 +23,14 @@ type State = {
 const GET_USERS = gql`
   {
     users {
-      list {
-        id
-        name
-        email
-        roles
-        updateDate
+      paged {
+        items {
+          id
+          name
+          email
+          roles
+          updateDate
+        }
       }
     }
   }
@@ -46,7 +48,7 @@ const DELETE_USERS = gql`
 
 const SUBSCRIPTION_USERS = gql`
   subscription {
-    generalEvents {
+    onDefaultEvent {
       correlationId
       event
       id
@@ -102,7 +104,7 @@ class UsersPage extends React.Component<Props, State> {
       } else {
         if (response.data) {
           this.setState({
-            users: response.data.users.list,
+            users: response.data.users.paged.items,
             isLoading: false,
             isSilentLoading: false,
             error: ''
@@ -149,13 +151,9 @@ class UsersPage extends React.Component<Props, State> {
     return this.apiService.subscribe(SUBSCRIPTION_USERS).subscribe(response => {
       if (response.errors) {
       } else {
-        var { event, id } = response.data.generalEvents;
-        if (event === 'UserCreated' || event === 'UserUpdated') {
+        var { event } = response.data.onDefaultEvent;
+        if (event.startsWith('User')) {
           this.refreshData();
-        } else if (event === 'UserRemoved') {
-          this.removeIdFromList(id);
-        } else {
-          console.log('Ignore event:' + event);
         }
       }
     });
