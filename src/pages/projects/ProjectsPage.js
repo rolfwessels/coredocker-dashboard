@@ -23,10 +23,12 @@ type State = {
 const GET_PROJECTS = gql`
   {
     projects {
-      list {
-        id
-        name
-        updateDate
+      paged {
+        items {
+          id
+          name
+          updateDate
+        }
       }
     }
   }
@@ -44,7 +46,7 @@ const DELETE_PROJECT = gql`
 
 const SUBSCRIPTION_PROJECT = gql`
   subscription {
-    generalEvents {
+    onDefaultEvent {
       correlationId
       event
       id
@@ -100,7 +102,7 @@ class ProjectsPage extends React.Component<Props, State> {
       } else {
         if (response.data) {
           this.setState({
-            projects: response.data.projects.list,
+            projects: response.data.projects.paged.items,
             isLoading: false,
             isSilentLoading: false,
             error: ''
@@ -147,11 +149,9 @@ class ProjectsPage extends React.Component<Props, State> {
     return this.apiService.subscribe(SUBSCRIPTION_PROJECT).subscribe(response => {
       if (response.errors) {
       } else {
-        var { event, id } = response.data.generalEvents;
-        if (event === 'ProjectCreated' || event === 'ProjectUpdated') {
+        var { event } = response.data.onDefaultEvent;
+        if (event.startsWith('Project')) {
           this.refreshData();
-        } else if (event === 'ProjectRemoved') {
-          this.removeIdFromList(id);
         }
       }
     });
