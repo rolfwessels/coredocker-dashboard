@@ -21,6 +21,7 @@ export class Token {
     return loggedIn;
   }
   hasAccess(activity: string) {
+    console.log('this.activities', this.activities);
     const isAllowed = this.activities.some(x => x === activity);
     return isAllowed;
   }
