@@ -21,7 +21,7 @@ const GET_PROJECT = gql`
 `;
 
 const INSERT_PROJECT = gql`
-  mutation createProject($projectName: String) {
+  mutation createProject($projectName: String!) {
     projects {
       create(project: { name: $projectName }) {
         id

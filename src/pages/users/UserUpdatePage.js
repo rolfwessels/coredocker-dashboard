@@ -23,7 +23,7 @@ const GET_USER = gql`
 `;
 
 const INSERT_USER = gql`
-  mutation createUser($userName: String!, $userEmail: String!, $userRoles: [String!]) {
+  mutation createUser($userName: String!, $userEmail: String!, $userRoles: [String!]!) {
     users {
       create(user: { name: $userName, email: $userEmail, roles: $userRoles }) {
         id
