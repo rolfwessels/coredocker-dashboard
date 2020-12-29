@@ -11,19 +11,19 @@ import { Route } from 'react-router-dom';
 
 type Props = {
   location: Location,
-  history: any,
+  history: any
 };
 
 type LoginData = {
   email: string,
-  password: string,
+  password: string
 };
 
 const storage = new DeviceStorage({
   cookieFallback: true,
   cookie: {
-    secure: true,
-  },
+    secure: true
+  }
 }).localStorage();
 
 class LoginPage extends React.Component<Props> {
@@ -36,13 +36,13 @@ class LoginPage extends React.Component<Props> {
   onLogin(values: LoginData, { setSubmitting, setErrors }: any) {
     setSubmitting(true);
     this.authService.login(values.email, values.password).then(
-      (t) => {
+      t => {
         console.log('login done');
         setSubmitting(false);
         storage.save('lastLoginEmail', values.email);
         window.location.href = '/';
       },
-      (e) => {
+      e => {
         console.error('error logging  in', e);
         setSubmitting(false);
         if (e.message === 'invalid_grant') {
@@ -62,9 +62,9 @@ class LoginPage extends React.Component<Props> {
       <Formik
         initialValues={{
           email: storage.read('lastLoginEmail'),
-          password: '',
+          password: ''
         }}
-        validate={(values) => {
+        validate={values => {
           // same as above, but feel free to move this into a class method now.
           let errors = {};
           if (!values.email) {
@@ -92,7 +92,7 @@ class LoginPage extends React.Component<Props> {
                     Don't have account yet?{' '}
                     <a
                       href="/register"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.preventDefault();
                         history.push(`/register/`);
                       }}
