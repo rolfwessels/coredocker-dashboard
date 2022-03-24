@@ -17,7 +17,7 @@
     "lodash.template": "^4.5.0",
     "md5": "^2.2.1",
     "mem": "^4.0.0",
-    "minimist": "^1.2.3",
+    "minimist": "^1.2.6",
     "prop-types": "^15.6.2",
     "query-string": "^6.2.0",
     "react": "^16.4.1",
