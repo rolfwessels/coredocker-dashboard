@@ -1,26 +1,25 @@
+# For developers
+
 [![Build Status](https://travis-ci.org/rolfwessels/coredocker-dashboard.svg?branch=master)](https://travis-ci.org/rolfwessels/coredocker-dashboard)
 [![Dockerhub Status](https://img.shields.io/badge/dockerhub-ok-blue.svg)](https://hub.docker.com/r/rolfwessels/coredocker-dashboard/)
 
+## Getting started
 
-# For developers
-
-Getting started
-
-```
+```cmd
 yarn
 yarn start
 ```
-# Deploy docker files
 
+## Deploy docker files
 
-```
+```bash
 docker-compose build;
 docker-compose up;
 ```
 
 Debugging
 
-```
+```bash
 docker-compose up -d;
 docker-compose exec www sh
 ```
